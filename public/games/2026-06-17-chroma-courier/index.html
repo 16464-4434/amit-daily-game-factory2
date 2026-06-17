@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://16464-4434.github.io/amit-daily-game-factory2/games/2026-06-17-chroma-courier/">
+<meta name="description" content="Pilot a nimble drone through a neon-drenched, impossible city, racing against time to deliver packages while surviving an onslaught of disruptive energy pulses.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chroma Courier</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            touch-action: manipulation; /* Prevents default browser gestures like pull-to-refresh */
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+            border: 2px solid #0ff; /* Neon border */
+            box-shadow: 0 0 15px #0ff, 0 0 30px #0ff;
+            max-width: 100vw;
+            max-height: 100vh;
+            width: 100%; /* Ensure canvas scales */
+            height: 100%; /* Ensure canvas scales */
+            aspect-ratio: 16 / 9; /* Maintain aspect ratio */
+            cursor: none; /* Hide default cursor during gameplay */
+        }
+
+        /* Game Container */
+        #gameContainer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        /* UI Screens */
+        .ui-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .ui-screen.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ui-screen h1, .ui-screen h2 {
+            color: #0ff; /* Cyan neon */
+            text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+            margin-bottom: 20px;
+            font-size: clamp(2em, 8vw, 4em);
+        }
+
+        .ui-screen p, .ui-screen ul {
+            font-size: clamp(0.9em, 2.5vw, 1.2em);
+            line-height: 1.5;
+            max-width: 600px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .ui-screen ul {
+            list-style: none;
+            padding: 0;
+        }
+        .ui-screen ul li {
+            margin-bottom: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .ui-button {
+            background: none;
+            border: 2px solid #0f0; /* Green neon */
+            color: #0f0;
+            padding: 12px 25px;
+            font-size: clamp(1em, 3vw, 1.5em);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 8px #0f0;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+        }
+
+        .ui-button:hover, .ui-button:focus {
+            background-color: #0f0;
+            color: #000;
+            box-shadow: 0 0 20px #0f0, 0 0 40px #0f0;
+        }
+
+        .ui-button:active {
+            transform: scale(0.98);
+        }
+
+        /* Specific UI elements */
+        #titleScreen h1 {
+            animation: neonGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes neonGlow {
+            from { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 30px #0ff; }
+            to { text-shadow: 0 0 5px #0ff, 0 0 15px #0ff, 0 0 25px #0ff, 0 0 40px #0ff; }
+        }
+
+        #gameplayUI {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 10px 20px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: clamp(0.8em, 2vw, 1.1em);
+            color: #fff;
+            text-shadow: 0 0 5px #fff;
+            z-index: 50;
+            pointer-events: none; /* Allow clicks to pass through to canvas */
+        }
+
+        #gameplayUI .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #gameplayUI .stat-icon {
+            font-size: clamp(1em, 2.5vw, 1.4em);
+            color: #0ff;
+            text-shadow: 0 0 5px #0ff;
+        }
+
+        #pauseButton {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: 2px solid #f0f; /* Magenta neon */
+            color: #f0f;
+            padding: 8px 15px;
+            font-size: clamp(0.8em, 2.5vw, 1.2em);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 8px #f0f;
+            transition: all 0.2s ease-in-out;
+            outline: none;
+            z-index: 101; /* Above other UI screens */
+        }
+
+        #pauseButton:hover {
+            background-color: #f0f;
+            color: #000;
+            box-shadow: 0 0 20px #f0f;
+        }
+
+        #pauseButton:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .ui-screen h1, .ui-screen h2 {
+                font-size: clamp(1.8em, 10vw, 3.5em);
+            }
+            .ui-screen p, .ui-screen ul {
+                font-size: clamp(0.8em, 3vw, 1.1em);
+            }
+            .ui-button {
+                padding: 10px 20px;
+                font-size: clamp(0.9em, 3.5vw, 1.3em);
+            }
+            #gameplayUI {
+                padding: 8px 15px;
+                font-size: clamp(0.7em, 2.5vw, 1em);
+            }
+            #gameplayUI .stat-icon {
+                font-size: clamp(0.9em, 3vw, 1.2em);
+            }
+            #pauseButton {
+                padding: 6px 12px;
+                font-size: clamp(0.7em, 3vw, 1em);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Title Screen -->
+        <div id="titleScreen" class="ui-screen active">
+            <h1>Chroma Courier</h1>
+            <p>Deliver the future, one byte at a time!</p>
+            <div class="button-group">
+                <button class="ui-button" onclick="game.startGame()">Start Game</button>
+                <button class="ui-button" onclick="game.showScreen('instructionsScreen')">Instructions</button>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructionsScreen" class="ui-screen">
+            <h2>How to Play</h2>
+            <p>You are a Chroma Courier, tasked with delivering vital data packages across the neon-lit cyber-grid. Your mission: collect packages and drop them off at matching colored zones, while avoiding dangerous obstacles!</p>
+            <ul>
+                <li><strong>Movement:</strong> Use <kbd>WASD</kbd> or <kbd>Arrow Keys</kbd> on keyboard, or <span class="stat-icon">👆</span> drag your ship with touch/mouse.</li>
+                <li><strong>Collect:</strong> Fly over a colored package to pick it up. You can only carry one at a time.</li>
+                <li><strong>Deliver:</strong> Fly over a drop-off zone that matches the color of your carried package to deliver it and score points.</li>
+                <li><strong>Avoid:</strong> Collide with obstacles and you'll lose health!</li>
+                <li><strong>Pause:</strong> Press <kbd>P</kbd> or <kbd>Escape</kbd>, or click the <button class="ui-button" style="display:inline-block; padding: 5px 10px; font-size: 0.8em; margin: 0; cursor: default;">PAUSE</button> button.</li>
+            </ul>
+            <div class="button-group">
+                <button class="ui-button" onclick="game.startGame()">Start Game</button>
+                <button class="ui-button" onclick="game.showScreen('titleScreen')">Back to Title</button>
+            </div>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pauseScreen" class="ui-screen">
+            <h2>Game Paused</h2>
+            <p>The grid awaits your return, Courier.</p>
+            <div class="button-group">
+                <button class="ui-button" onclick="game.togglePause()">Resume Game</button>
+                <button class="ui-button" onclick="game.restartGame()">Restart Game</button>
+                <button class="ui-button" onclick="game.quitToTitle()">Quit to Title</button>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="ui-screen">
+            <h2>Game Over!</h2>
+            <p>Mission Failed, Courier. The grid is lost.</p>
+            <p>Your Score: <span id="finalScore">0</span></p>
+            <p>High Score: <span id="highScoreDisplay">0</span></p>
+            <div class="button-group">
+                <button class="ui-button" onclick="game.restartGame()">Try Again</button>
+                <button class="ui-button" onclick="game.quitToTitle()">Quit to Title</button>
+            </div>
+        </div>
+
+        <!-- Gameplay UI -->
+        <div id="gameplayUI">
+            <div class="stat">
+                <span class="stat-icon">⭐</span> Score: <span id="scoreDisplay">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-icon">❤️</span> Lives: <span id="livesDisplay">3</span>
+            </div>
+            <div class="stat">
+                <span class="stat-icon">📦</span> Package: <span id="packageDisplay">None</span>
+            </div>
+        </div>
+
+        <button id="pauseButton" onclick="game.togglePause()">PAUSE</button>
+    </div>
+
+    <script>
+        // Game object to encapsulate all game logic
+        const game = {
+            // --- Game Constants ---
+            CANVAS_WIDTH: 1280,
+            CANVAS_HEIGHT: 720,
+            PLAYER_SIZE: 40,
+            PLAYER_SPEED: 250, // pixels per second
+            ENTITY_SPEED_BASE: 100, // pixels per second
+            ENTITY_SPAWN_INTERVAL_BASE: 1500, // milliseconds
+            MAX_LIVES: 3,
+            COLORS: ['#FF00FF', '#00FFFF', '#FFFF00', '#00FF00'], // Magenta, Cyan, Yellow, Green
+            OBSTACLE_COLORS: ['#FF0000', '#800080'], // Red, Purple
+            SHIELD_DURATION: 5000, // milliseconds
+            SPEED_BOOST_DURATION: 3000, // milliseconds
+            POWERUP_SPAWN_CHANCE: 0.1, // 10% chance
+            POWERUP_SIZE: 25,
+
+            // --- Game State Variables ---
+            canvas: null,
+            ctx: null,
+            animationFrameId: null,
+            lastTime: 0,
+            deltaTime: 0,
+
+            player: {
+                x: 0, y: 0, width: 0, height: 0,
+                dx: 0, dy: 0, // movement direction
+                color: '#FFFFFF',
+                shielded: false,
+                shieldTimer: 0,
+                speedBoosted: false,
+                speedBoostTimer: 0,
+                currentPackage: null // Stores the color of the package carried
+            },
+            packages: [],
+            dropZones: [],
+            obstacles: [],
+            powerUps: [],
+
+            score: 0,
+            highScore: 0,
+            lives: 0,
+            level: 1,
+            entitySpawnTimer: 0,
+
+            gamePaused: false,
+            currentGameState: 'TITLE', // 'TITLE', 'INSTRUCTIONS', 'PLAYING', 'PAUSED', 'GAME_OVER'
+
+            // --- Input Handling ---
+            input: {
+                keys: {},
+                pointer: {
+                    isDown: false,
+                    startX: 0,
+                    startY: 0,
+                    currentX: 0,
+                    currentY: 0,
+                    targetX: 0,
+                    targetY: 0,
+                    isMoving: false // Flag to indicate if player is actively being dragged
+                }
+            },
+
+            // --- UI Elements ---
+            ui: {
+                titleScreen: null,
+                instructionsScreen: null,
+                pauseScreen: null,
+                gameOverScreen: null,
+                gameplayUI: null,
+                scoreDisplay: null,
+                livesDisplay: null,
+                packageDisplay: null,
+                finalScore: null,
+                highScoreDisplay: null,
+                pauseButton: null
+            },
+
+            // --- Initialization ---
+            init() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+
+                // Set canvas dimensions
+                this.canvas.width = this.CANVAS_WIDTH;
+                this.canvas.height = this.CANVAS_HEIGHT;
+
+                // Get UI elements
+                this.ui.titleScreen = document.getElementById('titleScreen');
+                this.ui.instructionsScreen = document.getElementById('instructionsScreen');
+                this.ui.pauseScreen = document.getElementById('pauseScreen');
+                this.ui.gameOverScreen = document.getElementById('gameOverScreen');
+                this.ui.gameplayUI = document.getElementById('gameplayUI');
+                this.ui.scoreDisplay = document.getElementById('scoreDisplay');
+                this.ui.livesDisplay = document.getElementById('livesDisplay');
+                this.ui.packageDisplay = document.getElementById('packageDisplay');
+                this.ui.finalScore = document.getElementById('finalScore');
+                this.ui.highScoreDisplay = document.getElementById('highScoreDisplay');
+                this.ui.pauseButton = document.getElementById('pauseButton');
+
+                // Event Listeners
+                window.addEventListener('resize', this.resizeCanvas.bind(this));
+                document.addEventListener('keydown', this.handleKeyDown.bind(this));
+                document.addEventListener('keyup', this.handleKeyUp.bind(this));
+                this.canvas.addEventListener('pointerdown', this.handlePointerDown.bind(this));
+                this.canvas.addEventListener('pointermove', this.handlePointerMove.bind(this));
+                this.canvas.addEventListener('pointerup', this.handlePointerUp.bind(this));
+                this.canvas.addEventListener('pointerleave', this.handlePointerUp.bind(this)); // Treat leaving canvas as pointer up
+
+                this.resizeCanvas(); // Initial canvas resize
+                this.loadProgress(); // Load high score
+                this.showScreen('titleScreen'); // Start at title screen
+            },
+
+            resizeCanvas() {
+                const container = document.getElementById('gameContainer');
+                const containerWidth = container.clientWidth;
+                const containerHeight = container.clientHeight;
+
+                const aspectRatio = this.CANVAS_WIDTH / this.CANVAS_HEIGHT;
+                let newWidth, newHeight;
+
+                if (containerWidth / containerHeight > aspectRatio) {
+                    newHeight = containerHeight;
+                    newWidth = newHeight * aspectRatio;
+                } else {
+                    newWidth = containerWidth;
+                    newHeight = newWidth / aspectRatio;
+                }
+
+                this.canvas.style.width = `${newWidth}px`;
+                this.canvas.style.height = `${newHeight}px`;
+            },
+
+            // --- Game State Management ---
+            showScreen(screenId) {
+                // Hide all UI screens
+                document.querySelectorAll('.ui-screen').forEach(screen => {
+                    screen.classList.remove('active');
+                });
+                // Hide gameplay UI and pause button by default
+                this.ui.gameplayUI.style.display = 'none';
+                this.ui.pauseButton.style.display = 'none';
+
+                // Show the requested screen
+                const screen = document.getElementById(screenId);
+                if (screen) {
+                    screen.classList.add('active');
+                }
+
+                this.currentGameState = screenId.replace('Screen', '').toUpperCase();
+
+                // Specific actions for each state
+                if (this.currentGameState === 'PLAYING') {
+                    this.ui.gameplayUI.style.display = 'flex';
+                    this.ui.pauseButton.style.display = 'block';
+                    this.gamePaused = false;
+                    this.gameLoop(0); // Start/resume game loop
+                } else if (this.currentGameState === 'PAUSED') {
+                    this.gamePaused = true;
+                } else if (this.currentGameState === 'GAME_OVER') {
+                    this.ui.finalScore.textContent = this.score;
+                    this.ui.highScoreDisplay.textContent = this.highScore;
+                    this.gamePaused = true; // Ensure game loop is effectively paused
+                } else {
+                    // For TITLE, INSTRUCTIONS, ensure game loop is stopped if running
+                    if (this.animationFrameId) {
+                        cancelAnimationFrame(this.animationFrameId);
+                        this.animationFrameId = null;
+                    }
+                    this.gamePaused = false; // Not technically paused, just not playing
+                }
+            },
+
+            startGame() {
+                this.resetGame();
+                this.showScreen('gameplayUI'); // This will set currentGameState to PLAYING
+            },
+
+            restartGame() {
+                this.resetGame();
+                this.showScreen('gameplayUI'); // This will set currentGameState to PLAYING
+            },
+
+            quitToTitle() {
+                this.showScreen('titleScreen');
+            },
+
+            resetGame() {
+                this.score = 0;
+                this.lives = this.MAX_LIVES;
+                this.level = 1;
+                this.player = {
+                    x: this.CANVAS_WIDTH / 2 - this.PLAYER_SIZE / 2,
+                    y: this.CANVAS_HEIGHT - this.PLAYER_SIZE * 1.5,
+                    width: this.PLAYER_SIZE,
+                    height: this.PLAYER_SIZE,
+                    dx: 0, dy: 0,
+                    color: '#FFFFFF',
+                    shielded: false,
+                    shieldTimer: 0,
+                    speedBoosted: false,
+                    speedBoostTimer: 0,
+                    currentPackage: null
+                };
+                this.packages = [];
+                this.dropZones = [];
+                this.obstacles = [];
+                this.powerUps = [];
+                this.entitySpawnTimer = 0;
+                this.input.pointer.isMoving = false; // Reset pointer movement
+                this.updateGameplayUI();
+            },
+
+            togglePause() {
+                if (this.currentGameState === 'PLAYING' || this.currentGameState === 'PAUSED') {
+                    if (this.gamePaused) {
+                        this.showScreen('gameplayUI'); // Resumes game
+                    } else {
+                        this.showScreen('pauseScreen'); // Pauses game
+                    }
+                }
+            },
+
+            // --- Game Loop ---
+            gameLoop(timestamp) {
+                if (!this.lastTime) this.lastTime = timestamp;
+                this.deltaTime = (timestamp - this.lastTime) / 1000; // Convert to seconds
+                this.lastTime = timestamp;
+
+                if (this.currentGameState === 'PLAYING' && !this.gamePaused) {
+                    this.update(this.deltaTime);
+                    this.draw();
+                } else if (this.currentGameState === 'PAUSED') {
+                    this.draw(); // Still draw the game state behind the pause menu
+                }
+
+                this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+            },
+
+            // --- Update Game State ---
+            update(deltaTime) {
+                this.handleInput();
+                this.updatePlayer(deltaTime);
+                this.updateEntities(deltaTime);
+                this.checkCollisions();
+                this.spawnEntities(deltaTime);
+                this.updateTimers(deltaTime);
+                this.updateGameplayUI();
+
+                if (this.lives <= 0) {
+                    this.gameOver();
+                }
+            },
+
+            updatePlayer(deltaTime) {
+                let currentSpeed = this.PLAYER_SPEED;
+                if (this.player.speedBoosted) {
+                    currentSpeed *= 1.5; // 50% speed boost
+                }
+
+                // Keyboard movement
+                if (this.input.keys['ArrowLeft'] || this.input.keys['a']) this.player.dx = -1;
+                else if (this.input.keys['ArrowRight'] || this.input.keys['d']) this.player.dx = 1;
+                else this.player.dx = 0;
+
+                if (this.input.keys['ArrowUp'] || this.input.keys['w']) this.player.dy = -1;
+                else if (this.input.keys['ArrowDown'] || this.input.keys['s']) this.player.dy = 1;
+                else this.player.dy = 0;
+
+                // Pointer movement overrides keyboard if active
+                if (this.input.pointer.isMoving) {
+                    const targetX = this.input.pointer.targetX;
+                    const targetY = this.input.pointer.targetY;
+
+                    const dx = targetX - (this.player.x + this.player.width / 2);
+                    const dy = targetY - (this.player.y + this.player.height / 2);
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance > 5) { // Only move if target is far enough
+                        this.player.x += (dx / distance) * currentSpeed * deltaTime;
+                        this.player.y += (dy / distance) * currentSpeed * deltaTime;
+                    } else {
+                        this.player.x = targetX - this.player.width / 2;
+                        this.player.y = targetY - this.player.height / 2;
+                    }
+                } else {
+                    // Apply keyboard movement if no pointer movement
+                    this.player.x += this.player.dx * currentSpeed * deltaTime;
+                    this.player.y += this.player.dy * currentSpeed * deltaTime;
+                }
+
+                // Keep player within canvas bounds
+                this.player.x = Math.max(0, Math.min(this.CANVAS_WIDTH - this.player.width, this.player.x));
+                this.player.y = Math.max(0, Math.min(this.CANVAS_HEIGHT - this.player.height, this.player.y));
+            },
+
+            updateEntities(deltaTime) {
+                const entitySpeed = this.ENTITY_SPEED_BASE + (this.level - 1) * 20; // Speed increases with level
+
+                // Move and filter packages
+                this.packages = this.packages.filter(p => {
+                    p.y += entitySpeed * deltaTime;
+                    return p.y < this.CANVAS_HEIGHT;
+                });
+
+                // Move and filter drop zones
+                this.dropZones = this.dropZones.filter(z => {
+                    z.y += entitySpeed * deltaTime;
+                    return z.y < this.CANVAS_HEIGHT;
+                });
+
+                // Move and filter obstacles
+                this.obstacles = this.obstacles.filter(o => {
+                    o.y += entitySpeed * deltaTime;
+                    return o.y < this.CANVAS_HEIGHT;
+                });
+
+                // Move and filter power-ups
+                this.powerUps = this.powerUps.filter(pu => {
+                    pu.y += entitySpeed * deltaTime;
+                    return pu.y < this.CANVAS_HEIGHT;
+                });
+            },
+
+            spawnEntities(deltaTime) {
+                this.entitySpawnTimer += deltaTime * 1000; // Convert to milliseconds
+                const spawnInterval = this.ENTITY_SPAWN_INTERVAL_BASE / (1 + (this.level - 1) * 0.1);
+
+                if (this.entitySpawnTimer >= spawnInterval) {
+                    this.entitySpawnTimer = 0;
+
+                    // Randomly decide what to spawn
+                    const rand = Math.random();
+                    if (rand < 0.4) { // 40% chance for package
+                        this.spawnPackage();
+                    } else if (rand < 0.7) { // 30% chance for drop zone
+                        this.spawnDropZone();
+                    } else if (rand < 0.9) { // 20% chance for obstacle
+                        this.spawnObstacle();
+                    } else if (rand < 0.9 + this.POWERUP_SPAWN_CHANCE) { // 10% chance for power-up
+                        this.spawnPowerUp();
+                    }
+                }
+            },
+
+            spawnPackage() {
+                const color = this.COLORS[Math.floor(Math.random() * this.COLORS.length)];
+                const size = 30;
+                const x = Math.random() * (this.CANVAS_WIDTH - size);
+                this.packages.push({ x: x, y: -size, width: size, height: size, color: color, type: 'package' });
+            },
+
+            spawnDropZone() {
+                const color = this.COLORS[Math.floor(Math.random() * this.COLORS.length)];
+                const width = 80;
+                const height = 40;
+                const x = Math.random() * (this.CANVAS_WIDTH - width);
+                this.dropZones.push({ x: x, y: -height, width: width, height: height, color: color, type: 'dropZone' });
+            },
+
+            spawnObstacle() {
+                const type = Math.random() < 0.5 ? 'block' : 'laser';
+                let width, height, color;
+
+                if (type === 'block') {
+                    width = Math.random() * 80 + 40; // 40-120
+                    height = Math.random() * 30 + 20; // 20-50
+                    color = this.OBSTACLE_COLORS[0]; // Red
+                } else { // laser
+                    width = Math.random() * 150 + 100; // 100-250
+                    height = 10;
+                    color = this.OBSTACLE_COLORS[1]; // Purple
+                }
+                const x = Math.random() * (this.CANVAS_WIDTH - width);
+                this.obstacles.push({ x: x, y: -height, width: width, height: height, color: color, type: type });
+            },
+
+            spawnPowerUp() {
+                const type = Math.random() < 0.5 ? 'shield' : 'speed';
+                const color = type === 'shield' ? '#00FFFF' : '#00FF00'; // Cyan for shield, Green for speed
+                const size = this.POWERUP_SIZE;
+                const x = Math.random() * (this.CANVAS_WIDTH - size);
+                this.powerUps.push({ x: x, y: -size, width: size, height: size, color: color, type: type });
+            },
+
+            checkCollisions() {
+                // Player-Package collision
+                this.packages.forEach((p, index) => {
+                    if (this.isColliding(this.player, p)) {
+                        if (!this.player.currentPackage) { // Can only pick up if not carrying one
+                            this.player.currentPackage = p.color;
+                            this.packages.splice(index, 1); // Remove package
+                            this.updateGameplayUI();
+                        }
+                    }
+                });
+
+                // Player-DropZone collision
+                this.dropZones.forEach((z, index) => {
+                    if (this.isColliding(this.player, z)) {
+                        if (this.player.currentPackage === z.color) {
+                            this.score += 100 * this.level;
+                            this.player.currentPackage = null;
+                            this.dropZones.splice(index, 1); // Remove drop zone
+                            this.levelUpCheck();
+                            this.updateGameplayUI();
+                        }
+                    }
+                });
+
+                // Player-Obstacle collision
+                this.obstacles.forEach((o, index) => {
+                    if (this.isColliding(this.player, o)) {
+                        if (!this.player.shielded) {
+                            this.lives--;
+                            this.obstacles.splice(index, 1); // Remove obstacle after hit
+                            this.updateGameplayUI();
+                        } else {
+                            // If shielded, just remove obstacle
+                            this.obstacles.splice(index, 1);
+                        }
+                    }
+                });
+
+                // Player-PowerUp collision
+                this.powerUps.forEach((pu, index) => {
+                    if (this.isColliding(this.player, pu)) {
+                        if (pu.type === 'shield') {
+                            this.player.shielded = true;
+                            this.player.shieldTimer = this.SHIELD_DURATION;
+                        } else if (pu.type === 'speed') {
+                            this.player.speedBoosted = true;
+                            this.player.speedBoostTimer = this.SPEED_BOOST_DURATION;
+                        }
+                        this.powerUps.splice(index, 1); // Remove power-up
+                    }
+                });
+            },
+
+            isColliding(rect1, rect2) {
+                return rect1.x < rect2.x + rect2.width &&
+                       rect1.x + rect1.width > rect2.x &&
+                       rect1.y < rect2.y + rect2.height &&
+                       rect1.y + rect1.height > rect2.y;
+            },
+
+            levelUpCheck() {
+                if (this.score >= this.level * 500) { // Example: Level up every 500 points
+                    this.level++;
+                    // Maybe add a temporary message or effect
+                }
+            },
+
+            updateTimers(deltaTime) {
+                if (this.player.shielded) {
+                    this.player.shieldTimer -= deltaTime * 1000;
+                    if (this.player.shieldTimer <= 0) {
+                        this.player.shielded = false;
+                        this.player.shieldTimer = 0;
+                    }
+                }
+                if (this.player.speedBoosted) {
+                    this.player.speedBoostTimer -= deltaTime * 1000;
+                    if (this.player.speedBoostTimer <= 0) {
+                        this.player.speedBoosted = false;
+                        this.player.speedBoostTimer = 0;
+                    }
+                }
+            },
+
+            gameOver() {
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    this.saveProgress();
+                }
+                this.showScreen('gameOverScreen');
+            },
+
+            // --- Drawing ---
+            draw() {
+                this.ctx.clearRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+                this.ctx.fillStyle = '#000';
+                this.ctx.fillRect(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+
+                this.drawBackgroundGrid();
+                this.drawEntities();
+                this.drawPlayer();
+            },
+
+            drawBackgroundGrid() {
+                this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.1)'; // Faint cyan grid
+                this.ctx.lineWidth = 1;
+                const gridSize = 50;
+
+                for (let x = 0; x <= this.CANVAS_WIDTH; x += gridSize) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x, 0);
+                    this.ctx.lineTo(x, this.CANVAS_HEIGHT);
+                    this.ctx.stroke();
+                }
+                for (let y = 0; y <= this.CANVAS_HEIGHT; y += gridSize) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, y);
+                    this.ctx.lineTo(this.CANVAS_WIDTH, y);
+                    this.ctx.stroke();
+                }
+            },
+
+            drawPlayer() {
+                this.ctx.save();
+                this.ctx.translate(this.player.x + this.player.width / 2, this.player.y + this.player.height / 2);
+
+                // Draw player ship (simple triangle for now)
+                this.ctx.fillStyle = this.player.color;
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, -this.player.height / 2);
+                this.ctx.lineTo(this.player.width / 2, this.player.height / 2);
+                this.ctx.lineTo(-this.player.width / 2, this.player.height / 2);
+                this.ctx.closePath();
+                this.ctx.fill();
+                this.ctx.strokeStyle = '#0ff';
+                this.ctx.lineWidth = 2;
+                this.ctx.shadowColor = '#0ff';
+                this.ctx.shadowBlur = 10;
+                this.ctx.stroke();
+                this.ctx.shadowBlur = 0; // Reset shadow
+
+                // Draw package if carried
+                if (this.player.currentPackage) {
+                    const pkgSize = this.player.width * 0.6;
+                    this.ctx.fillStyle = this.player.currentPackage;
+                    this.ctx.fillRect(-pkgSize / 2, -pkgSize / 2, pkgSize, pkgSize);
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(-pkgSize / 2, -pkgSize / 2, pkgSize, pkgSize);
+                }
+
+                // Draw shield if active
+                if (this.player.shielded) {
+                    this.ctx.beginPath();
+                    this.ctx.arc(0, 0, this.player.width * 0.8, 0, Math.PI * 2);
+                    this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.8)';
+                    this.ctx.lineWidth = 3;
+                    this.ctx.shadowColor = '#0ff';
+                    this.ctx.shadowBlur = 15;
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+                }
+
+                this.ctx.restore();
+            },
+
+            drawEntities() {
+                // Draw packages
+                this.packages.forEach(p => {
+                    this.ctx.fillStyle = p.color;
+                    this.ctx.fillRect(p.x, p.y, p.width, p.height);
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(p.x, p.y, p.width, p.height);
+                    this.ctx.shadowColor = p.color;
+                    this.ctx.shadowBlur = 5;
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+                });
+
+                // Draw drop zones
+                this.dropZones.forEach(z => {
+                    this.ctx.fillStyle = z.color;
+                    this.ctx.fillRect(z.x, z.y, z.width, z.height);
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(z.x, z.y, z.width, z.height);
+                    this.ctx.shadowColor = z.color;
+                    this.ctx.shadowBlur = 8;
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+
+                    // Draw a target symbol
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(z.x + z.width * 0.2, z.y + z.height * 0.5);
+                    this.ctx.lineTo(z.x + z.width * 0.8, z.y + z.height * 0.5);
+                    this.ctx.moveTo(z.x + z.width * 0.5, z.y + z.height * 0.2);
+                    this.ctx.lineTo(z.x + z.width * 0.5, z.y + z.height * 0.8);
+                    this.ctx.stroke();
+                });
+
+                // Draw obstacles
+                this.obstacles.forEach(o => {
+                    this.ctx.fillStyle = o.color;
+                    this.ctx.fillRect(o.x, o.y, o.width, o.height);
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.strokeRect(o.x, o.y, o.width, o.height);
+                    this.ctx.shadowColor = o.color;
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+                });
+
+                // Draw power-ups
+                this.powerUps.forEach(pu => {
+                    this.ctx.fillStyle = pu.color;
+                    this.ctx.beginPath();
+                    this.ctx.arc(pu.x + pu.width / 2, pu.y + pu.height / 2, pu.width / 2, 0, Math.PI * 2);
+                    this.ctx.fill();
+                    this.ctx.strokeStyle = '#fff';
+                    this.ctx.lineWidth = 1;
+                    this.ctx.stroke();
+                    this.ctx.shadowColor = pu.color;
+                    this.ctx.shadowBlur = 8;
+                    this.ctx.stroke();
+                    this.ctx.shadowBlur = 0;
+
+                    // Draw symbol inside
+                    this.ctx.fillStyle = '#000';
+                    this.ctx.font = `${pu.width * 0.6}px Arial`;
+                    this.ctx.textAlign = 'center';
+                    this.ctx.textBaseline = 'middle';
+                    if (pu.type === 'shield') {
+                        this.ctx.fillText('S', pu.x + pu.width / 2, pu.y + pu.height / 2);
+                    } else if (pu.type === 'speed') {
+                        this.ctx.fillText('⚡', pu.x + pu.width / 2, pu.y + pu.height / 2);
+                    }
+                });
+            },
+
+            // --- UI Updates ---
+            updateGameplayUI() {
+                this.ui.scoreDisplay.textContent = this.score;
+                this.ui.livesDisplay.textContent = this.lives;
+                this.ui.packageDisplay.textContent = this.player.currentPackage ?
+                    `<span style="color:${this.player.currentPackage}; text-shadow: 0 0 5px ${this.player.currentPackage};">COLOR</span>` : 'None';
+            },
+
+            // --- Local Storage ---
+            saveProgress() {
+                localStorage.setItem('chromaCourierHighScore', this.highScore);
+            },
+
+            loadProgress() {
+                const savedHighScore = localStorage.getItem('chromaCourierHighScore');
+                if (savedHighScore) {
+                    this.highScore = parseInt(savedHighScore, 10);
+                }
+            },
+
+            // --- Input Handlers ---
+            handleKeyDown(event) {
+                this.input.keys[event.key.toLowerCase()] = true;
+                if (event.key === 'p' || event.key === 'P' || event.key === 'Escape') {
+                    this.togglePause();
+                }
+            },
+
+            handleKeyUp(event) {
+                this.input.keys[event.key.toLowerCase()] = false;
+            },
+
+            handlePointerDown(event) {
+                if (this.currentGameState === 'PLAYING' && !this.gamePaused) {
+                    this.input.pointer.isDown = true;
+                    this.input.pointer.startX = event.clientX;
+                    this.input.pointer.startY = event.clientY;
+                    this.input.pointer.currentX = event.clientX;
+                    this.input.pointer.currentY = event.clientY;
+
+                    // Convert client coordinates to canvas coordinates
+                    const rect = this.canvas.getBoundingClientRect();
+                    const scaleX = this.canvas.width / rect.width;
+                    const scaleY = this.canvas.height / rect.height;
+
+                    this.input.pointer.targetX = (event.clientX - rect.left) * scaleX;
+                    this.input.pointer.targetY = (event.clientY - rect.top) * scaleY;
+
+                    this.input.pointer.isMoving = true; // Start moving player to touch point
+                    event.preventDefault(); // Prevent default touch actions like scrolling
+                }
+            },
+
+            handlePointerMove(event) {
+                if (this.input.pointer.isDown && this.currentGameState === 'PLAYING' && !this.gamePaused) {
+                    this.input.pointer.currentX = event.clientX;
+                    this.input.pointer.currentY = event.clientY;
+
+                    const rect = this.canvas.getBoundingClientRect();
+                    const scaleX = this.canvas.width / rect.width;
+                    const scaleY = this.canvas.height / rect.height;
+
+                    this.input.pointer.targetX = (event.clientX - rect.left) * scaleX;
+                    this.input.pointer.targetY = (event.clientY - rect.top) * scaleY;
+                    event.preventDefault();
+                }
+            },
+
+            handlePointerUp(event) {
+                this.input.pointer.isDown = false;
+                this.input.pointer.isMoving = false; // Stop moving player
+                event.preventDefault();
+            }
+        };
+
+        // Initialize the game when the DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            game.init();
+        });
+    </script>
+</body>
+</html>
