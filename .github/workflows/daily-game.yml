@@ -1,0 +1,90 @@
+name: Daily Game Factory
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 14:00 UTC = 17:00 in Israel during daylight-saving time.
+    - cron: "0 14 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-game-factory
+  cancel-in-progress: false
+
+jobs:
+  create-deploy-email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: gemini-2.5-flash
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      SITE_URL: ${{ secrets.SITE_URL }}
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      QUALITY_REPAIR_ATTEMPTS: "2"
+      MIN_GAME_SIZE: "18000"
+
+    steps:
+      - name: Download the project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Check required secrets
+        shell: bash
+        run: |
+          missing=0
+          for name in GEMINI_API_KEY NETLIFY_AUTH_TOKEN NETLIFY_SITE_ID SITE_URL GMAIL_USER GMAIL_APP_PASSWORD EMAIL_TO; do
+            if [ -z "${!name}" ]; then
+              echo "Missing GitHub Secret: $name"
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate a substantial new game
+        run: npm run generate
+
+      - name: Validate every game before publishing
+        run: npm run validate
+
+      - name: Save the new game in the repository
+        run: |
+          git config user.name "Amit Game Factory"
+          git config user.email "actions@users.noreply.github.com"
+          git add public
+          git diff --cached --quiet || git commit -m "Add daily game $(date -u +%F)"
+          git push
+
+      - name: Publish the gallery to Netlify
+        run: npm run deploy
+
+      - name: Email the new game link
+        run: npm run email
+
+      - name: Keep debugging files when something fails
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: game-factory-debug-${{ github.run_number }}
+          path: |
+            .automation/
+            public/
+          if-no-files-found: ignore
+          retention-days: 7
