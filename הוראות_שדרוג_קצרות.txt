@@ -1,0 +1,5 @@
+1. העלה ל-GitHub את כל הקבצים שבתיקייה הזאת והחלף קבצים קיימים.
+2. שנה את המאגר מ-Private ל-Public.
+3. Settings -> Pages -> Source -> GitHub Actions.
+4. Actions -> Amit Game Factory V2 -> Run workflow.
+5. לאחר הצלחה, אפשר למחוק את סודות Netlify הישנים כי הם אינם בשימוש.
