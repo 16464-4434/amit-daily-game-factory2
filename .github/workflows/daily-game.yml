@@ -1,33 +1,40 @@
-name: Daily Game Factory
+name: Amit Game Factory V2
 
 on:
   workflow_dispatch:
   schedule:
-    # 14:00 UTC = 17:00 in Israel during daylight-saving time.
-    - cron: "0 14 * * *"
+    # Two games every day, automatically adjusted for Israel daylight-saving time.
+    # Odd minutes reduce the chance of GitHub's top-of-hour scheduling delays.
+    - cron: "17 9 * * *"
+      timezone: "Asia/Jerusalem"
+    - cron: "43 18 * * *"
+      timezone: "Asia/Jerusalem"
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-  group: daily-game-factory
+  group: amit-game-factory-v2
   cancel-in-progress: false
 
 jobs:
-  create-deploy-email:
+  create-publish-email:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GEMINI_MODEL: gemini-2.5-flash
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-      SITE_URL: ${{ secrets.SITE_URL }}
       GMAIL_USER: ${{ secrets.GMAIL_USER }}
       GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
       EMAIL_TO: ${{ secrets.EMAIL_TO }}
-      QUALITY_REPAIR_ATTEMPTS: "2"
-      MIN_GAME_SIZE: "18000"
+      MIN_GAME_SIZE: "26000"
+      MIN_QUALITY_SCORE: "78"
+      QUALITY_IMPROVEMENT_ATTEMPTS: "1"
 
     steps:
       - name: Download the project
@@ -41,11 +48,17 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Calculate the GitHub Pages address
+        shell: bash
+        run: |
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          echo "SITE_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}" >> "$GITHUB_ENV"
+
       - name: Check required secrets
         shell: bash
         run: |
           missing=0
-          for name in GEMINI_API_KEY NETLIFY_AUTH_TOKEN NETLIFY_SITE_ID SITE_URL GMAIL_USER GMAIL_APP_PASSWORD EMAIL_TO; do
+          for name in GEMINI_API_KEY GMAIL_USER GMAIL_APP_PASSWORD EMAIL_TO; do
             if [ -z "${!name}" ]; then
               echo "Missing GitHub Secret: $name"
               missing=1
@@ -58,31 +71,43 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate a substantial new game
+      - name: Design, build, review, and improve a new game
         run: npm run generate
 
-      - name: Validate every game before publishing
+      - name: Validate the complete gallery
         run: npm run validate
 
-      - name: Save the new game in the repository
+      - name: Save the new game in GitHub
+        shell: bash
         run: |
           git config user.name "Amit Game Factory"
           git config user.email "actions@users.noreply.github.com"
           git add public
-          git diff --cached --quiet || git commit -m "Add daily game $(date -u +%F)"
+          git diff --cached --quiet || git commit -m "Add V2 game $(date -u +%F-%H%M)"
           git push
 
-      - name: Publish the gallery to Netlify
-        run: npm run deploy
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Package the website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Publish with GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
       - name: Email the new game link
+        env:
+          DEPLOYED_SITE_URL: ${{ steps.deployment.outputs.page_url }}
         run: npm run email
 
       - name: Keep debugging files when something fails
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: game-factory-debug-${{ github.run_number }}
+          name: game-factory-v2-debug-${{ github.run_number }}
           path: |
             .automation/
             public/
