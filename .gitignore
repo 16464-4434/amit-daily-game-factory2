@@ -1,7 +1,5 @@
 node_modules/
 .env
-.env.*
-*.env
-.automation/*.json
-.automation/*.log
+.automation/
+site.zip
 .DS_Store

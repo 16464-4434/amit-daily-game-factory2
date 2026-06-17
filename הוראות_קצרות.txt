@@ -1,0 +1,6 @@
+1. חלץ את ה-ZIP.
+2. העלה ל-GitHub את כל מה שבתיקייה, כולל .github, scripts, templates ו-public.
+3. אשר החלפה של קבצים קיימים.
+4. ודא שהוחלף .github/workflows/daily-game.yml.
+5. פתח Actions → Amit Game Factory V3 → Run workflow.
+6. הסודות הקיימים נשארים; אין צורך ליצור חדשים.

@@ -1,9 +1,9 @@
 {
-  "name": "amit-game-factory-v2",
-  "version": "2.0.0",
+  "name": "amit-game-factory-v3",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "description": "A two-games-per-day AI browser-game studio with multi-agent quality review and GitHub Pages publishing.",
+  "description": "Reliable twice-daily browser game generation with GitHub Pages publishing and Netlify fallback.",
   "scripts": {
     "generate": "node scripts/generate-game.mjs",
     "validate": "node scripts/validate-site.mjs",
@@ -12,9 +12,5 @@
   },
   "engines": {
     "node": ">=20"
-  },
-  "dependencies": {
-    "dotenv": "^16.5.0",
-    "nodemailer": "^9.0.0"
   }
 }
