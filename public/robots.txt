@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://mellifluous-maamoul-ea92b8.netlify.app/sitemap.xml

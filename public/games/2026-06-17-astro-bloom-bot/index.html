@@ -1,0 +1,2340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="canonical" href="https://mellifluous-maamoul-ea92b8.netlify.app/games/2026-06-17-astro-bloom-bot/">
+<meta name="description" content="Guide a tiny repair bot through a procedurally shifting space garden, collecting resources, crafting tools, and completing quests to restore its vibrant ecosystem.">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>AstroBloom Bot</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0d0d1a;
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: manipulation; /* Prevent default touch actions like double-tap zoom */
+        }
+
+        canvas {
+            display: block;
+            background-color: #0d0d1a;
+            border: 2px solid #3a3a60;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+
+        .game-ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Allow canvas interactions by default */
+        }
+
+        .ui-screen, .overlay {
+            position: absolute;
+            background-color: rgba(10, 10, 30, 0.95);
+            border: 2px solid #5a5a90;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 200, 255, 0.5);
+            text-align: center;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            pointer-events: auto; /* Re-enable pointer events for UI elements */
+            display: none; /* Hidden by default */
+            z-index: 1000;
+            color: #d0e0ff;
+            font-size: clamp(14px, 2vw, 20px);
+            line-height: 1.5;
+        }
+
+        .overlay {
+            background-color: rgba(10, 10, 30, 0.8);
+            border: none;
+            box-shadow: none;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .screen-content {
+            padding: 10px;
+        }
+
+        h1 {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff, 0 0 20px #00aaff;
+            font-size: clamp(2em, 5vw, 4em);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #aaffff;
+            font-size: clamp(1.5em, 4vw, 2.5em);
+            margin-top: 15px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 10px;
+        }
+
+        .button {
+            background-color: #2a2a60;
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            padding: 12px 25px;
+            margin: 8px;
+            cursor: pointer;
+            font-size: clamp(16px, 2.5vw, 22px);
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            pointer-events: auto;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #00ffff;
+            color: #0d0d1a;
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .button:active {
+            transform: translateY(1px);
+            box-shadow: 0 0 5px #00ffff;
+        }
+
+        .button-group {
+            margin-top: 20px;
+        }
+
+        .control-button {
+            position: absolute;
+            background-color: rgba(42, 42, 96, 0.7);
+            color: #00ffff;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            width: clamp(50px, 10vw, 80px);
+            height: clamp(50px, 10vw, 80px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(1.2em, 3vw, 2em);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+            pointer-events: auto;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            z-index: 100;
+            -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+        }
+
+        .control-button:hover {
+            background-color: rgba(0, 255, 255, 0.3);
+            box-shadow: 0 0 15px #00ffff;
+        }
+
+        .control-button.action {
+            right: 5%;
+            bottom: 15%;
+        }
+
+        .control-button.menu {
+            right: 5%;
+            top: 5%;
+            font-size: clamp(1em, 2.5vw, 1.5em);
+            width: clamp(40px, 8vw, 60px);
+            height: clamp(40px, 8vw, 60px);
+            border-radius: 10px;
+        }
+
+        .control-button.sound {
+            left: 5%;
+            top: 5%;
+            font-size: clamp(1em, 2.5vw, 1.5em);
+            width: clamp(40px, 8vw, 60px);
+            height: clamp(40px, 8vw, 60px);
+            border-radius: 10px;
+        }
+
+        .control-button.dir {
+            opacity: 0.7;
+        }
+
+        #direction-controls {
+            position: absolute;
+            left: 5%;
+            bottom: 5%;
+            width: clamp(150px, 30vw, 200px);
+            height: clamp(150px, 30vw, 200px);
+            display: grid;
+            grid-template-areas:
+                ". up ."
+                "left . right"
+                ". down .";
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr;
+            pointer-events: auto;
+            z-index: 100;
+        }
+
+        #direction-controls .control-button {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            font-size: clamp(1em, 2.5vw, 1.5em);
+            box-shadow: none;
+            border: none;
+            background-color: rgba(42, 42, 96, 0.5);
+            transition: background-color 0.1s;
+        }
+
+        #direction-controls .control-button:hover {
+             background-color: rgba(0, 255, 255, 0.2);
+        }
+
+        #dir-up { grid-area: up; }
+        #dir-left { grid-area: left; }
+        #dir-right { grid-area: right; }
+        #dir-down { grid-area: down; }
+
+        .game-footer {
+            position: absolute;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+            color: #6a6a90;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .control-button {
+                width: clamp(45px, 12vw, 70px);
+                height: clamp(45px, 12vw, 70px);
+                font-size: clamp(1em, 3.5vw, 1.8em);
+            }
+            .control-button.menu, .control-button.sound {
+                width: clamp(35px, 10vw, 50px);
+                height: clamp(35px, 10vw, 50px);
+                font-size: clamp(0.8em, 2.8vw, 1.2em);
+            }
+            #direction-controls {
+                width: clamp(120px, 35vw, 180px);
+                height: clamp(120px, 35vw, 180px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+
+    <div class="game-ui">
+        <!-- Title Screen -->
+        <div id="titleScreen" class="ui-screen">
+            <div class="screen-content">
+                <h1>AstroBloom Bot</h1>
+                <p>Guide your tiny repair bot through a procedurally shifting space garden, collecting resources, crafting tools, and completing quests to restore its vibrant ecosystem.</p>
+                <div class="button-group">
+                    <button class="button" onclick="startGame()">Start Game</button>
+                    <button class="button" onclick="showTutorial()">Tutorial</button>
+                    <button class="button" onclick="showSettings()">Settings</button>
+                    <button class="button" onclick="loadGame()">Load Game</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tutorial Screen -->
+        <div id="tutorialScreen" class="ui-screen">
+            <div class="screen-content">
+                <h2>Tutorial: Cosmic Gardening Basics</h2>
+                <p>Welcome, little bot! Your mission is to restore the AstroBloom garden.</p>
+                <p><strong>Movement:</strong> Use WASD or Arrow keys (keyboard) / Directional pad (touch) to move.</p>
+                <p><strong>Interaction:</strong> Press 'E' or the Action button (touch) to gather resources, repair plants, or activate objects.</p>
+                <p><strong>Resources:</strong> Collect Pollen, Metal Scraps, and Crystal Shards from nodes. They regenerate!</p>
+                <p><strong>Crafting:</strong> Open the Menu ('M' or Menu button) to craft repair parts and new tools from your inventory.</p>
+                <p><strong>Quests:</strong> Track your objectives in the Menu. Completing them earns Bloom Energy.</p>
+                <p><strong>Upgrades:</strong> Spend Bloom Energy in the Upgrades menu to boost your bot's speed, battery, cargo, and unlock new abilities like a grapple hook!</p>
+                <p><strong>Sector Shifting:</strong> The garden sectors will periodically drift and re-orient, changing the map! Adapt and find new paths.</p>
+                <p><strong>Bloom Level:</strong> Restore damaged elements to increase the garden's overall Bloom Level. Higher levels unlock new sectors!</p>
+                <button class="button" onclick="showTitleScreen()">Back to Title</button>
+            </div>
+        </div>
+
+        <!-- Pause Screen / In-Game Menu -->
+        <div id="pauseScreen" class="overlay">
+            <div class="ui-screen">
+                <div class="screen-content">
+                    <h2>Game Paused</h2>
+                    <p>Bloom Level: <span id="pauseBloomLevel">0%</span></p>
+                    <p>Battery: <span id="pauseBattery">0 / 0</span></p>
+                    <div class="button-group">
+                        <button class="button" onclick="resumeGame()">Resume Game</button>
+                        <button class="button" onclick="showInventoryMenu()">Inventory & Crafting</button>
+                        <button class="button" onclick="showUpgradesMenu()">Bot Upgrades</button>
+                        <button class="button" onclick="showQuestsMenu()">Active Quests</button>
+                        <button class="button" onclick="showSettings()">Settings</button>
+                        <button class="button" onclick="returnToTitleConfirm()">Return to Title</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inventory & Crafting Screen -->
+        <div id="inventoryCraftingScreen" class="ui-screen">
+            <div class="screen-content">
+                <h2>Inventory & Crafting</h2>
+                <h3>Inventory:</h3>
+                <ul id="inventoryList" style="list-style: none; padding: 0; margin-bottom: 20px;"></ul>
+                <h3>Crafting Recipes:</h3>
+                <div id="craftingRecipesList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;"></div>
+                <button class="button" onclick="showPauseScreen()">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- Upgrades Screen -->
+        <div id="upgradesScreen" class="ui-screen">
+            <div class="screen-content">
+                <h2>Bot Upgrades</h2>
+                <p>Bloom Energy: <span id="currentBloomEnergy">0</span></p>
+                <div id="upgradesList" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;"></div>
+                <button class="button" onclick="showPauseScreen()">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- Quests Screen -->
+        <div id="questsScreen" class="ui-screen">
+            <div class="screen-content">
+                <h2>Active Quests</h2>
+                <ul id="questsList" style="list-style: none; padding: 0; text-align: left;"></ul>
+                <button class="button" onclick="showPauseScreen()">Back to Menu</button>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="ui-screen">
+            <div class="screen-content">
+                <h2>Settings</h2>
+                <div class="button-group">
+                    <button class="button" id="muteButton" onclick="toggleMute()">Mute Sound</button>
+                </div>
+                <button class="button" onclick="closeSettings()">Back</button>
+            </div>
+        </div>
+
+        <!-- Win Screen -->
+        <div id="winScreen" class="overlay">
+            <div class="ui-screen">
+                <div class="screen-content">
+                    <h2>Mission Accomplished!</h2>
+                    <p>The AstroBloom garden is fully restored, teeming with vibrant life!</p>
+                    <p>Your tiny bot has saved the ecosystem. Congratulations!</p>
+                    <div class="button-group">
+                        <button class="button" onclick="showTitleScreen()">Return to Title</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lose Screen -->
+        <div id="loseScreen" class="overlay">
+            <div class="ui-screen">
+                <div class="screen-content">
+                    <h2>Mission Failed...</h2>
+                    <p>Your bot ran out of battery, or the garden fell into disrepair...</p>
+                    <p>The AstroBloom garden needs your help! Try again!</p>
+                    <div class="button-group">
+                        <button class="button" onclick="showTitleScreen()">Return to Title</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirmation Dialog -->
+        <div id="confirmDialog" class="overlay">
+            <div class="ui-screen">
+                <div class="screen-content">
+                    <h2>Are you sure?</h2>
+                    <p id="confirmMessage">This action cannot be undone.</p>
+                    <div class="button-group">
+                        <button class="button" id="confirmYes" onclick="">Yes</button>
+                        <button class="button" id="confirmNo" onclick="hideConfirmDialog()">No</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Mobile Controls -->
+        <div id="mobileControls" style="display: none;">
+            <div id="direction-controls">
+                <button class="control-button dir" id="dir-up" data-dir="up">▲</button>
+                <button class="control-button dir" id="dir-left" data-dir="left">◀</button>
+                <button class="control-button dir" id="dir-right" data-dir="right">▶</button>
+                <button class="control-button dir" id="dir-down" data-dir="down">▼</button>
+            </div>
+            <button class="control-button action" id="actionButton">E</button>
+            <button class="control-button menu" id="menuButton">☰</button>
+            <button class="control-button sound" id="soundButton">♪</button>
+        </div>
+    </div>
+
+    <div class="game-footer">
+        Created by Amit’s Daily Game Factory
+    </div>
+
+    <script>
+        // --- Game Configuration ---
+        const GAME_TITLE = "AstroBloom Bot";
+        const TILE_SIZE = 32; // Size of a single tile in pixels
+        const PLAYER_SIZE = TILE_SIZE * 0.6;
+        const DEFAULT_PLAYER_SPEED = 100; // Pixels per second
+        const BASE_BATTERY_CAPACITY = 100;
+        const BATTERY_DRAIN_RATE = 2; // Per second, for movement
+        const INTERACTION_BATTERY_COST = 5;
+        const RESOURCE_SPAWN_CHANCE = 0.7; // Chance for a resource node to spawn on an empty tile
+        const DAMAGED_PLANT_SPAWN_CHANCE = 0.2; // Chance for a damaged plant to spawn
+        const MAX_INVENTORY_SLOTS = 10; // Base inventory slots
+        const SHIFT_SECTOR_INTERVAL = 60; // Seconds between major sector shifts
+        const SHAKE_DURATION = 200; // ms
+        const SHAKE_INTENSITY = 5; // pixels
+        const TOTAL_BLOOM_REQUIRED_FOR_WIN = 1000;
+        const MAX_SECTORS = 8; // Total sectors in the game
+        const SECTOR_GRID_SIZE = 3; // 3x3 grid of sectors for the world map
+
+        // --- Game State Variables ---
+        let canvas, ctx;
+        let gameWidth, gameHeight;
+        let lastTime = 0;
+        let deltaTime = 0; // in seconds
+        let animationFrameId;
+
+        const gameState = {
+            currentScreen: 'title', // 'title', 'game', 'pause', 'tutorial', 'win', 'lose', 'inventory', 'upgrades', 'quests', 'settings'
+            isPaused: false,
+            isMuted: true,
+            shakeTime: 0,
+            shakeOffset: { x: 0, y: 0 },
+            lastSectorShiftTime: 0,
+            lastSpawnTime: 0, // Used for ambient particles/regeneration
+            bloomLevel: 0,
+            totalBloomRequired: TOTAL_BLOOM_REQUIRED_FOR_WIN,
+        };
+
+        const player = {
+            x: 0,
+            y: 0,
+            speed: DEFAULT_PLAYER_SPEED,
+            dx: 0, // Direction x
+            dy: 0, // Direction y
+            facing: { x: 0, y: 1 }, // Default facing down
+            inventory: {}, // { 'pollen': 10, 'metal': 5 }
+            maxInventorySlots: MAX_INVENTORY_SLOTS,
+            battery: BASE_BATTERY_CAPACITY,
+            maxBattery: BASE_BATTERY_CAPACITY,
+            bloomEnergy: 0,
+            upgrades: {
+                speed: 0, // Level
+                battery: 0,
+                cargo: 0,
+                grappleHook: false, // Unlocked
+                energyShield: false, // Unlocked
+            },
+            currentSectorId: 0,
+            grappleTarget: null, // { x, y, sectorId }
+            grappleActive: false,
+            shieldActive: false,
+            shieldTimer: 0,
+            shieldDuration: 3000, // ms
+            shieldCooldown: 10000, // ms
+            lastShieldUse: 0,
+        };
+
+        const camera = {
+            x: 0,
+            y: 0,
+            targetX: 0,
+            targetY: 0,
+            lerpFactor: 0.1, // Smooth camera movement
+        };
+
+        const input = {
+            keys: {}, // { 'w': true, 'a': false }
+            touch: {
+                moving: false,
+                startX: 0,
+                startY: 0,
+                currentX: 0,
+                currentY: 0,
+                directionX: 0,
+                directionY: 0,
+            },
+            actionPressed: false,
+        };
+
+        const particles = [];
+
+        // --- Game Data ---
+        const RESOURCE_TYPES = {
+            POLLEN: { name: 'Pollen', color: '#ffe066', gatherTime: 0.5, value: 5 },
+            METAL: { name: 'Metal Scraps', color: '#a0a0a0', gatherTime: 1, value: 10 },
+            CRYSTAL: { name: 'Crystal Shards', color: '#88ffff', gatherTime: 1.5, value: 15 },
+        };
+
+        const DAMAGED_TYPES = {
+            ASTROFRUIT: { name: 'Wilting Astrofruits', color: '#ff6666', repairTime: 1, reward: 20,
+                cost: { pollen: 2, metal: 1 } },
+            STARDUST: { name: 'Stardust Blockages', color: '#cc99ff', repairTime: 1.5, reward: 30,
+                cost: { metal: 2, crystal: 1 } },
+            CORE_COMPONENT: { name: 'Core Conduit Fragment', color: '#ffdd00', repairTime: 2, reward: 50,
+                cost: { pollen: 5, metal: 3, crystal: 2 } },
+        };
+
+        const QUEST_TYPES = {
+            GATHER: 'gather',
+            REPAIR: 'repair',
+            CRAFT: 'craft',
+            EXPLORE: 'explore',
+        };
+
+        const craftingRecipes = [
+            {
+                id: 'repair_kit_basic', name: 'Basic Repair Kit',
+                inputs: { pollen: 3, metal: 1 }, outputs: { repair_kit_basic: 1 },
+                description: 'Used for minor repairs.',
+                craftCost: 10
+            },
+            {
+                id: 'grapple_module', name: 'Grapple Module',
+                inputs: { metal: 5, crystal: 3 }, outputs: { grapple_module: 1 },
+                description: 'Unlocks the Grapple Hook ability.',
+                craftCost: 20
+            },
+            {
+                id: 'shield_generator', name: 'Shield Generator',
+                inputs: { metal: 8, crystal: 5 }, outputs: { shield_generator: 1 },
+                description: 'Unlocks the Energy Shield ability.',
+                craftCost: 30
+            },
+            {
+                id: 'core_stabilizer', name: 'Core Stabilizer',
+                inputs: { pollen: 10, metal: 10, crystal: 10 }, outputs: { core_stabilizer: 1 },
+                description: 'Essential for the Core Bloom Chamber.',
+                craftCost: 50
+            },
+        ];
+
+        const upgradeData = {
+            speed: {
+                name: "Bot Speed",
+                levels: [
+                    { cost: 10, effect: 20, desc: "+20 speed" },
+                    { cost: 25, effect: 20, desc: "+20 speed" },
+                    { cost: 50, effect: 20, desc: "+20 speed" },
+                ]
+            },
+            battery: {
+                name: "Battery Capacity",
+                levels: [
+                    { cost: 15, effect: 25, desc: "+25 max battery" },
+                    { cost: 30, effect: 25, desc: "+25 max battery" },
+                    { cost: 60, effect: 25, desc: "+25 max battery" },
+                ]
+            },
+            cargo: {
+                name: "Cargo Slots",
+                levels: [
+                    { cost: 10, effect: 2, desc: "+2 inventory slots" },
+                    { cost: 20, effect: 2, desc: "+2 inventory slots" },
+                    { cost: 40, effect: 2, desc: "+2 inventory slots" },
+                ]
+            },
+            grappleHook: {
+                name: "Grapple Hook",
+                levels: [
+                    { cost: 30, effect: true, desc: "Unlock Grapple Hook ability" }
+                ]
+            },
+            energyShield: {
+                name: "Energy Shield",
+                levels: [
+                    { cost: 40, effect: true, desc: "Unlock Energy Shield ability" }
+                ]
+            }
+        };
+
+        // --- World Map & Sectors ---
+        const worldMap = {
+            grid: Array(SECTOR_GRID_SIZE).fill(0).map(() => Array(SECTOR_GRID_SIZE).fill(null)),
+            sectorWidthTiles: 20,
+            sectorHeightTiles: 20,
+            sectorCount: 0,
+            connections: [], // { from: {x,y}, to: {x,y}, type: 'bridge' }
+        };
+
+        const sectors = []; // Array of sector objects
+
+        // Sector structure:
+        // {
+        //   id: 0,
+        //   name: "Sector Name",
+        //   grid: [[]], // 2D array of tile types (0: empty, 1: obstacle, 2: resource, 3: damaged)
+        //   mapX: 0, // Position in the worldMap grid
+        //   mapY: 0,
+        //   offsetX: 0, // Global pixel offset
+        //   offsetY: 0,
+        //   rotation: 0, // 0, 90, 180, 270 degrees
+        //   isUnlocked: false,
+        //   damagedElements: [], // { x, y, type, currentHealth, maxHealth }
+        //   resourceNodes: [], // { x, y, type, amount, maxAmount }
+        //   warpPoints: [], // { x, y, targetSectorId, targetX, targetY }
+        // }
+
+        // --- Initial Quests ---
+        const initialQuests = [
+            {
+                id: 'q1_gather_pollen', description: 'Gather 5 Pollen.',
+                type: QUEST_TYPES.GATHER, targetType: 'pollen', required: 5, current: 0,
+                rewardBloom: 10, rewardEnergy: 5, isCompleted: false, isClaimed: false
+            },
+            {
+                id: 'q2_repair_astrofruit', description: 'Repair 1 Wilting Astrofruits.',
+                type: QUEST_TYPES.REPAIR, targetType: 'astrofruit', required: 1, current: 0,
+                rewardBloom: 20, rewardEnergy: 10, isCompleted: false, isClaimed: false
+            },
+            {
+                id: 'q3_craft_kit', description: 'Craft 1 Basic Repair Kit.',
+                type: QUEST_TYPES.CRAFT, targetType: 'repair_kit_basic', required: 1, current: 0,
+                rewardBloom: 15, rewardEnergy: 8, isCompleted: false, isClaimed: false
+            },
+        ];
+        let activeQuests = [];
+
+        // --- Web Audio Context & Sounds ---
+        let audioContext;
+        let ambientGainNode;
+        let masterGainNode;
+
+        function initAudio() {
+            if (audioContext) return;
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            masterGainNode = audioContext.createGain();
+            masterGainNode.connect(audioContext.destination);
+            masterGainNode.gain.value = gameState.isMuted ? 0 : 1;
+
+            ambientGainNode = audioContext.createGain();
+            ambientGainNode.gain.value = 0.1; // So it's not too loud
+            ambientGainNode.connect(masterGainNode);
+
+            startAmbientSound();
+        }
+
+        function playSound(type, frequency = 440, duration = 0.1, gain = 0.5, wave = 'sine') {
+            if (gameState.isMuted || !audioContext) return;
+
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.type = wave;
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(gain, audioContext.currentTime);
+
+            oscillator.connect(gainNode);
+            gainNode.connect(masterGainNode);
+
+            oscillator.start(audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + duration);
+            oscillator.stop(audioContext.currentTime + duration);
+        }
+
+        function startAmbientSound() {
+            if (!audioContext || ambientGainNode.gain.value === 0) return; // Don't start if muted or already started
+
+            const oscillator1 = audioContext.createOscillator();
+            oscillator1.type = 'sawtooth';
+            oscillator1.frequency.setValueAtTime(60, audioContext.currentTime);
+            oscillator1.connect(ambientGainNode);
+            oscillator1.start();
+
+            const oscillator2 = audioContext.createOscillator();
+            oscillator2.type = 'triangle';
+            oscillator2.frequency.setValueAtTime(60.5, audioContext.currentTime); // Slightly detuned
+            oscillator2.connect(ambientGainNode);
+            oscillator2.start();
+
+            // Keep oscillators running indefinitely for ambient sound
+            // In a real game, you might want to stop/start them more gracefully
+        }
+
+        function toggleMute() {
+            gameState.isMuted = !gameState.isMuted;
+            if (masterGainNode) {
+                masterGainNode.gain.value = gameState.isMuted ? 0 : 1;
+            }
+            if (ambientGainNode) {
+                ambientGainNode.gain.value = gameState.isMuted ? 0 : 0.1;
+            }
+            document.getElementById('muteButton').textContent = gameState.isMuted ? 'Unmute Sound' : 'Mute Sound';
+            document.getElementById('soundButton').innerHTML = gameState.isMuted ? '🔇' : '♪';
+            playSound('beep', 880, 0.05, 0.3);
+        }
+
+        // --- Core Game Loop ---
+        function gameLoop(time) {
+            deltaTime = (time - lastTime) / 1000; // Convert to seconds
+            lastTime = time;
+
+            if (gameState.currentScreen === 'game' && !gameState.isPaused) {
+                update(deltaTime);
+            }
+            draw();
+
+            animationFrameId = requestAnimationFrame(gameLoop);
+        }
+
+        function update(dt) {
+            // Apply screen shake
+            if (gameState.shakeTime > 0) {
+                gameState.shakeTime -= dt * 1000;
+                gameState.shakeOffset.x = (Math.random() - 0.5) * SHAKE_INTENSITY * (gameState.shakeTime / SHAKE_DURATION);
+                gameState.shakeOffset.y = (Math.random() - 0.5) * SHAKE_INTENSITY * (gameState.shakeTime / SHAKE_DURATION);
+            } else {
+                gameState.shakeOffset.x = 0;
+                gameState.shakeOffset.y = 0;
+            }
+
+            // Player movement
+            let moveX = 0;
+            let moveY = 0;
+
+            if (input.keys['w'] || input.keys['ArrowUp'] || (input.touch.moving && input.touch.directionY < 0)) moveY = -1;
+            if (input.keys['s'] || input.keys['ArrowDown'] || (input.touch.moving && input.touch.directionY > 0)) moveY = 1;
+            if (input.keys['a'] || input.keys['ArrowLeft'] || (input.touch.moving && input.touch.directionX < 0)) moveX = -1;
+            if (input.keys['d'] || input.keys['ArrowRight'] || (input.touch.moving && input.touch.directionX > 0)) moveX = 1;
+
+            // Normalize movement vector
+            if (moveX !== 0 || moveY !== 0) {
+                const magnitude = Math.sqrt(moveX * moveX + moveY * moveY);
+                player.dx = moveX / magnitude;
+                player.dy = moveY / magnitude;
+                player.facing.x = player.dx;
+                player.facing.y = player.dy;
+
+                if (player.battery > 0) {
+                    player.x += player.dx * player.speed * dt;
+                    player.y += player.dy * player.speed * dt;
+                    player.battery -= BATTERY_DRAIN_RATE * dt;
+                    if (player.battery < 0) player.battery = 0;
+                }
+            } else {
+                player.dx = 0;
+                player.dy = 0;
+            }
+
+            // Grapple hook logic
+            if (player.grappleActive && player.grappleTarget) {
+                const targetPixelX = player.grappleTarget.x * TILE_SIZE + TILE_SIZE / 2;
+                const targetPixelY = player.grappleTarget.y * TILE_SIZE + TILE_SIZE / 2;
+                const dist = distance(player.x, player.y, targetPixelX, targetPixelY);
+
+                if (dist > PLAYER_SIZE / 2) {
+                    const angle = Math.atan2(targetPixelY - player.y, targetPixelX - player.x);
+                    player.x += Math.cos(angle) * player.speed * 2 * dt; // Faster grapple speed
+                    player.y += Math.sin(angle) * player.speed * 2 * dt;
+                    player.battery -= BATTERY_DRAIN_RATE * 2 * dt; // Grapple costs more battery
+                    if (player.battery < 0) player.battery = 0;
+                } else {
+                    player.grappleActive = false;
+                    player.grappleTarget = null;
+                    playSound('grapple_stop', 200, 0.1, 0.5);
+                }
+            }
+
+            // Shield logic
+            if (player.shieldActive) {
+                player.shieldTimer -= dt * 1000;
+                if (player.shieldTimer <= 0) {
+                    player.shieldActive = false;
+                    playSound('shield_off', 100, 0.1, 0.5);
+                }
+            }
+
+            // Check for battery depletion
+            if (player.battery <= 0 && gameState.currentScreen === 'game') {
+                gameOver('battery');
+            }
+
+            // Update current sector
+            const currentSector = sectors[player.currentSectorId];
+            const playerGridX = Math.floor((player.x - currentSector.offsetX) / TILE_SIZE);
+            const playerGridY = Math.floor((player.y - currentSector.offsetY) / TILE_SIZE);
+
+            // Clamp player position within current sector boundaries
+            const sectorMinX = currentSector.offsetX + PLAYER_SIZE / 2;
+            const sectorMinY = currentSector.offsetY + PLAYER_SIZE / 2;
+            const sectorMaxX = currentSector.offsetX + currentSector.widthTiles * TILE_SIZE - PLAYER_SIZE / 2;
+            const sectorMaxY = currentSector.offsetY + currentSector.heightTiles * TILE_SIZE - PLAYER_SIZE / 2;
+
+            player.x = Math.max(sectorMinX, Math.min(player.x, sectorMaxX));
+            player.y = Math.max(sectorMinY, Math.min(player.y, sectorMaxY));
+
+            // Basic collision with obstacles
+            const checkCollision = (px, py) => {
+                const gridX = Math.floor((px - currentSector.offsetX) / TILE_SIZE);
+                const gridY = Math.floor((py - currentSector.offsetY) / TILE_SIZE);
+
+                if (gridX < 0 || gridX >= currentSector.widthTiles || gridY < 0 || gridY >= currentSector.heightTiles) {
+                    return true; // Out of bounds of the current sector
+                }
+
+                const tileType = currentSector.grid[gridY][gridX];
+                return tileType === 1; // 1 represents an obstacle
+            };
+
+            const newPlayerX = player.x;
+            const newPlayerY = player.y;
+
+            // X-axis collision
+            if (checkCollision(newPlayerX, player.y)) {
+                player.x -= player.dx * player.speed * dt; // Revert X movement
+            }
+            // Y-axis collision
+            if (checkCollision(player.x, newPlayerY)) {
+                player.y -= player.dy * player.speed * dt; // Revert Y movement
+            }
+
+            // Particle updates
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx * dt;
+                p.y += p.vy * dt;
+                p.life -= dt;
+                p.size *= (1 - 0.5 * dt); // Shrink
+                if (p.life <= 0 || p.size <= 0.1) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            // Camera update
+            camera.targetX = player.x - gameWidth / 2;
+            camera.targetY = player.y - gameHeight / 2;
+            camera.x += (camera.targetX - camera.x) * camera.lerpFactor;
+            camera.y += (camera.targetY - camera.y) * camera.lerpFactor;
+
+            // Sector shifting logic
+            if (audioContext && audioContext.state === 'running' && (lastTime - gameState.lastSectorShiftTime) / 1000 > SHIFT_SECTOR_INTERVAL) {
+                shiftSectors();
+                gameState.lastSectorShiftTime = lastTime;
+                startScreenShake(300, 10);
+                playSound('shift', 150, 0.5, 0.8, 'sawtooth');
+            }
+
+            // Regenerate resources and damaged elements (simple periodic regeneration)
+            if ((lastTime - gameState.lastSpawnTime) / 1000 > 10) { // Every 10 seconds
+                sectors.forEach(sector => {
+                    sector.resourceNodes.forEach(node => {
+                        if (node.amount < node.maxAmount) {
+                            node.amount = Math.min(node.maxAmount, node.amount + 1);
+                        }
+                    });
+                    sector.damagedElements.forEach(element => {
+                        if (element.currentHealth < element.maxHealth && element.type !== 'repaired') {
+                            element.currentHealth = Math.min(element.maxHealth, element.currentHealth + 1);
+                        }
+                    });
+                });
+                gameState.lastSpawnTime = lastTime;
+            }
+
+            // Win condition check
+            if (gameState.bloomLevel >= gameState.totalBloomRequired) {
+                winGame();
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, gameWidth, gameHeight);
+            ctx.save();
+            ctx.translate(gameState.shakeOffset.x, gameState.shakeOffset.y);
+
+            if (gameState.currentScreen === 'game' || gameState.isPaused) {
+                drawGameWorld();
+                drawHUD();
+            }
+
+            ctx.restore(); // Restore shake translation
+
+            // Draw UI screens on top of everything
+            drawUIScreens();
+        }
+
+        function drawGameWorld() {
+            // Draw cosmic background (stars)
+            drawStars();
+
+            // Draw sectors
+            sectors.forEach(sector => {
+                if (!sector.isUnlocked) return; // Only draw unlocked sectors
+
+                ctx.save();
+                ctx.translate(sector.offsetX - camera.x, sector.offsetY - camera.y);
+                ctx.rotate(sector.rotation * Math.PI / 180);
+                ctx.translate(-(sector.widthTiles * TILE_SIZE / 2), -(sector.heightTiles * TILE_SIZE / 2)); // Rotate around center
+
+                // Draw sector ground
+                ctx.fillStyle = '#1a1a33';
+                ctx.fillRect(0, 0, sector.widthTiles * TILE_SIZE, sector.heightTiles * TILE_SIZE);
+                ctx.strokeStyle = '#3a3a60';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(0, 0, sector.widthTiles * TILE_SIZE, sector.heightTiles * TILE_SIZE);
+
+                // Draw tiles (obstacles, etc.)
+                for (let y = 0; y < sector.heightTiles; y++) {
+                    for (let x = 0; x < sector.widthTiles; x++) {
+                        const tileType = sector.grid[y][x];
+                        if (tileType === 1) { // Obstacle
+                            ctx.fillStyle = '#2a2a4a';
+                            ctx.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                            ctx.strokeStyle = '#4a4a7a';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                        }
+                    }
+                }
+
+                // Draw resource nodes
+                sector.resourceNodes.forEach(node => {
+                    if (node.amount > 0) {
+                        drawResourceNode(node.x * TILE_SIZE + TILE_SIZE / 2, node.y * TILE_SIZE + TILE_SIZE / 2, node.type, node.amount / node.maxAmount);
+                    }
+                });
+
+                // Draw damaged elements
+                sector.damagedElements.forEach(element => {
+                    if (element.type !== 'repaired') {
+                        drawDamagedElement(element.x * TILE_SIZE + TILE_SIZE / 2, element.y * TILE_SIZE + TILE_SIZE / 2, element.type, element.currentHealth / element.maxHealth);
+                    }
+                });
+
+                // Draw warp points
+                sector.warpPoints.forEach(wp => {
+                    ctx.fillStyle = 'rgba(0, 255, 255, 0.3)';
+                    ctx.beginPath();
+                    ctx.arc(wp.x * TILE_SIZE + TILE_SIZE / 2, wp.y * TILE_SIZE + TILE_SIZE / 2, TILE_SIZE / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#00ffff';
+                    ctx.stroke();
+                });
+
+                ctx.restore();
+            });
+
+            // Draw player
+            drawPlayer();
+
+            // Draw grapple line if active
+            if (player.grappleActive && player.grappleTarget) {
+                const targetPixelX = player.grappleTarget.x * TILE_SIZE + TILE_SIZE / 2;
+                const targetPixelY = player.grappleTarget.y * TILE_SIZE + TILE_SIZE / 2;
+                ctx.strokeStyle = '#00ffff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(player.x - camera.x, player.y - camera.y);
+                ctx.lineTo(targetPixelX - camera.x, targetPixelY - camera.y);
+                ctx.stroke();
+            }
+
+            // Draw particles
+            particles.forEach(p => {
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x - camera.x, p.y - camera.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+        }
+
+        function drawStars() {
+            ctx.fillStyle = '#0d0d1a';
+            ctx.fillRect(0, 0, gameWidth, gameHeight);
+
+            // Simple starfield effect
+            for (let i = 0; i < 100; i++) { // 100 stars
+                const starX = (Math.sin(i * 100 + lastTime * 0.00001) * gameWidth * 2 + player.x * 0.1) % gameWidth;
+                const starY = (Math.cos(i * 100 + lastTime * 0.00001) * gameHeight * 2 + player.y * 0.1) % gameHeight;
+                const size = Math.random() * 2 + 0.5;
+                const alpha = Math.random() * 0.8 + 0.2;
+                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(starX, starY, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function drawPlayer() {
+            ctx.save();
+            ctx.translate(player.x - camera.x, player.y - camera.y);
+
+            // Rotate player to face direction of movement
+            let angle = Math.atan2(player.facing.y, player.facing.x);
+            if (player.dx === 0 && player.dy === 0) { // If not moving, keep last facing direction
+                angle = Math.atan2(player.facing.y, player.facing.x);
+            }
+            ctx.rotate(angle + Math.PI / 2); // Adjust for default drawing direction (up)
+
+            // Body
+            ctx.fillStyle = '#00ffff';
+            ctx.beginPath();
+            ctx.arc(0, 0, PLAYER_SIZE / 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00aaff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Eye (small circle on top)
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(0, -PLAYER_SIZE / 4, PLAYER_SIZE / 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Antennas (lines)
+            ctx.strokeStyle = '#00aaff';
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(-PLAYER_SIZE / 4, -PLAYER_SIZE / 2);
+            ctx.lineTo(-PLAYER_SIZE / 4 - 5, -PLAYER_SIZE / 2 - 10);
+            ctx.moveTo(PLAYER_SIZE / 4, -PLAYER_SIZE / 2);
+            ctx.lineTo(PLAYER_SIZE / 4 + 5, -PLAYER_SIZE / 2 - 10);
+            ctx.stroke();
+
+            // Energy Shield effect
+            if (player.shieldActive) {
+                ctx.beginPath();
+                ctx.arc(0, 0, PLAYER_SIZE * 0.8, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(0, 255, 255, ${0.5 + Math.sin(lastTime / 100) * 0.2})`;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        function drawResourceNode(x, y, type, healthRatio) {
+            const res = RESOURCE_TYPES[type.toUpperCase()];
+            if (!res) return;
+
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Base
+            ctx.fillStyle = res.color;
+            ctx.beginPath();
+            ctx.arc(0, 0, TILE_SIZE * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = darkenColor(res.color, 0.2);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Resource amount indicator
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.fillRect(-TILE_SIZE * 0.25, TILE_SIZE * 0.4, TILE_SIZE * 0.5, TILE_SIZE * 0.1);
+            ctx.fillStyle = lightenColor(res.color, 0.3);
+            ctx.fillRect(-TILE_SIZE * 0.25, TILE_SIZE * 0.4, TILE_SIZE * 0.5 * healthRatio, TILE_SIZE * 0.1);
+            ctx.strokeStyle = darkenColor(res.color, 0.2);
+            ctx.strokeRect(-TILE_SIZE * 0.25, TILE_SIZE * 0.4, TILE_SIZE * 0.5, TILE_SIZE * 0.1);
+
+            ctx.restore();
+        }
+
+        function drawDamagedElement(x, y, type, healthRatio) {
+            const def = DAMAGED_TYPES[type.toUpperCase()];
+            if (!def) return;
+
+            ctx.save();
+            ctx.translate(x, y);
+
+            // Base shape (e.g., a wilting flower or broken machinery)
+            ctx.fillStyle = def.color;
+            ctx.beginPath();
+            if (type === 'astrofruit') {
+                ctx.arc(0, 0, TILE_SIZE * 0.4, 0, Math.PI * 2);
+            } else if (type === 'stardust') {
+                ctx.rect(-TILE_SIZE * 0.3, -TILE_SIZE * 0.3, TILE_SIZE * 0.6, TILE_SIZE * 0.6);
+            } else if (type === 'core_component') {
+                ctx.rect(-TILE_SIZE * 0.4, -TILE_SIZE * 0.4, TILE_SIZE * 0.8, TILE_SIZE * 0.8);
+                ctx.arc(0, 0, TILE_SIZE * 0.2, 0, Math.PI * 2, true); // Hole in center
+            }
+            ctx.fill();
+            ctx.strokeStyle = darkenColor(def.color, 0.2);
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Damage/health indicator (red for damaged, green for repaired)
+            const indicatorColor = `hsl(${healthRatio * 120}, 100%, 50%)`; // Green to Red
+            ctx.fillStyle = indicatorColor;
+            ctx.beginPath();
+            ctx.arc(0, 0, TILE_SIZE * 0.2, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * healthRatio);
+            ctx.lineTo(0, 0);
+            ctx.fill();
+
+            ctx.strokeStyle = darkenColor(def.color, 0.3);
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        function drawHUD() {
+            // Bloom Level
+            ctx.fillStyle = '#00ffff';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText(`Bloom: ${Math.floor(gameState.bloomLevel / gameState.totalBloomRequired * 100)}%`, 10, 30);
+
+            // Battery Bar
+            ctx.fillStyle = '#3a3a60';
+            ctx.fillRect(10, 40, 100, 15);
+            const batteryColor = player.battery > player.maxBattery * 0.2 ? '#00ff00' : '#ff0000';
+            ctx.fillStyle = batteryColor;
+            ctx.fillRect(10, 40, (player.battery / player.maxBattery) * 100, 15);
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(10, 40, 100, 15);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '12px Arial';
+            ctx.fillText(`Battery: ${Math.floor(player.battery)} / ${player.maxBattery}`, 15, 52);
+
+            // Inventory (top right)
+            let invX = gameWidth - 10;
+            let invY = 30;
+            ctx.textAlign = 'right';
+            ctx.font = '16px Arial';
+            ctx.fillStyle = '#ffffff';
+            ctx.fillText('Inventory:', invX, invY);
+            invY += 20;
+            for (const item in player.inventory) {
+                if (player.inventory[item] > 0) {
+                    ctx.fillText(`${RESOURCE_TYPES[item.toUpperCase()]?.name || item}: ${player.inventory[item]}`, invX, invY);
+                    invY += 20;
+                }
+            }
+
+            // Active Quests (bottom left)
+            let questX = 10;
+            let questY = gameHeight - 100;
+            ctx.textAlign = 'left';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillStyle = '#00ffff';
+            ctx.fillText('Active Quests:', questX, questY);
+            questY += 20;
+            ctx.font = '14px Arial';
+            activeQuests.filter(q => !q.isCompleted).slice(0, 3).forEach(q => {
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText(`- ${q.description} (${q.current}/${q.required})`, questX, questY);
+                questY += 20;
+            });
+        }
+
+        function drawUIScreens() {
+            document.getElementById('titleScreen').style.display = gameState.currentScreen === 'title' ? 'flex' : 'none';
+            document.getElementById('tutorialScreen').style.display = gameState.currentScreen === 'tutorial' ? 'flex' : 'none';
+            document.getElementById('pauseScreen').style.display = gameState.isPaused && gameState.currentScreen === 'game' ? 'flex' : 'none';
+            document.getElementById('inventoryCraftingScreen').style.display = gameState.currentScreen === 'inventory' ? 'flex' : 'none';
+            document.getElementById('upgradesScreen').style.display = gameState.currentScreen === 'upgrades' ? 'flex' : 'none';
+            document.getElementById('questsScreen').style.display = gameState.currentScreen === 'quests' ? 'flex' : 'none';
+            document.getElementById('settingsScreen').style.display = gameState.currentScreen === 'settings' ? 'flex' : 'none';
+            document.getElementById('winScreen').style.display = gameState.currentScreen === 'win' ? 'flex' : 'none';
+            document.getElementById('loseScreen').style.display = gameState.currentScreen === 'lose' ? 'flex' : 'none';
+            document.getElementById('confirmDialog').style.display = gameState.currentScreen === 'confirm' ? 'flex' : 'none';
+
+            const mobileControls = document.getElementById('mobileControls');
+            if (isMobileDevice() && gameState.currentScreen === 'game' && !gameState.isPaused) {
+                mobileControls.style.display = 'block';
+            } else {
+                mobileControls.style.display = 'none';
+            }
+        }
+
+        // --- UI Functions ---
+        function showScreen(screenName) {
+            gameState.currentScreen = screenName;
+            gameState.isPaused = (screenName !== 'game' && screenName !== 'title'); // Pause if not game or title
+            updateUI();
+            if (screenName !== 'title') {
+                initAudio(); // Initialize audio context on first user interaction
+            }
+            if (screenName === 'pause') {
+                document.getElementById('pauseBloomLevel').textContent = `${Math.floor(gameState.bloomLevel / gameState.totalBloomRequired * 100)}%`;
+                document.getElementById('pauseBattery').textContent = `${Math.floor(player.battery)} / ${player.maxBattery}`;
+            }
+            if (screenName === 'inventory') {
+                updateInventoryDisplay();
+                updateCraftingDisplay();
+            }
+            if (screenName === 'upgrades') {
+                updateUpgradesDisplay();
+            }
+            if (screenName === 'quests') {
+                updateQuestsDisplay();
+            }
+            playSound('beep', 660, 0.05, 0.3);
+        }
+
+        function startGame() {
+            resetGame(true); // Reset game, don't clear save
+            initGame();
+            showScreen('game');
+            gameState.lastSectorShiftTime = lastTime; // Start timer for shifts
+            saveGame();
+        }
+
+        function showTutorial() { showScreen('tutorial'); }
+        function showSettings() { showScreen('settings'); }
+        function showPauseScreen() { showScreen('pause'); }
+        function showTitleScreen() {
+             showScreen('title');
+             resetGame(false); // Reset to clean state for title screen
+        }
+        function resumeGame() { showScreen('game'); gameState.isPaused = false; playSound('beep', 550, 0.05, 0.3); }
+
+        function closeSettings() {
+            if (gameState.currentScreen === 'settings') {
+                if (gameState.isPaused) {
+                    showPauseScreen();
+                } else {
+                    showTitleScreen();
+                }
+            }
+        }
+
+        function showConfirmDialog(message, onConfirm) {
+            document.getElementById('confirmMessage').textContent = message;
+            document.getElementById('confirmYes').onclick = () => {
+                onConfirm();
+                hideConfirmDialog();
+            };
+            showScreen('confirm');
+        }
+
+        function hideConfirmDialog() {
+            if (gameState.isPaused) {
+                showPauseScreen();
+            } else {
+                showTitleScreen();
+            }
+        }
+
+        function returnToTitleConfirm() {
+            showConfirmDialog("Are you sure you want to return to the title? Unsaved progress will be lost.", () => {
+                showTitleScreen();
+            });
+        }
+
+        function showInventoryMenu() { showScreen('inventory'); }
+        function showUpgradesMenu() { showScreen('upgrades'); }
+        function showQuestsMenu() { showScreen('quests'); }
+
+        function updateInventoryDisplay() {
+            const list = document.getElementById('inventoryList');
+            list.innerHTML = '';
+            let hasItems = false;
+            for (const item in player.inventory) {
+                if (player.inventory[item] > 0) {
+                    hasItems = true;
+                    const li = document.createElement('li');
+                    li.textContent = `${RESOURCE_TYPES[item.toUpperCase()]?.name || item}: ${player.inventory[item]}`;
+                    list.appendChild(li);
+                }
+            }
+            if (!hasItems) {
+                const li = document.createElement('li');
+                li.textContent = 'Inventory is empty.';
+                list.appendChild(li);
+            }
+        }
+
+        function updateCraftingDisplay() {
+            const list = document.getElementById('craftingRecipesList');
+            list.innerHTML = '';
+            craftingRecipes.forEach(recipe => {
+                const canCraft = canAfford(player.inventory, recipe.inputs);
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'crafting-item';
+                itemDiv.style.border = `1px solid ${canCraft ? '#00ff00' : '#888888'}`;
+                itemDiv.style.borderRadius = '5px';
+                itemDiv.style.padding = '10px';
+                itemDiv.style.marginBottom = '10px';
+                itemDiv.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                itemDiv.style.textAlign = 'left';
+
+                const title = document.createElement('h4');
+                title.style.color = canCraft ? '#00ffff' : '#aaaaaa';
+                title.style.margin = '0 0 5px 0';
+                title.textContent = recipe.name;
+                itemDiv.appendChild(title);
+
+                const desc = document.createElement('p');
+                desc.style.fontSize = '0.9em';
+                desc.style.color = '#cccccc';
+                desc.style.margin = '0 0 5px 0';
+                desc.textContent = recipe.description;
+                itemDiv.appendChild(desc);
+
+                const inputsDiv = document.createElement('p');
+                inputsDiv.style.fontSize = '0.8em';
+                inputsDiv.style.color = '#dddddd';
+                inputsDiv.style.margin = '0 0 5px 0';
+                inputsDiv.textContent = 'Cost: ';
+                for (const input in recipe.inputs) {
+                    inputsDiv.textContent += `${recipe.inputs[input]} ${RESOURCE_TYPES[input.toUpperCase()]?.name || input}, `;
+                }
+                inputsDiv.textContent = inputsDiv.textContent.slice(0, -2); // Remove trailing comma and space
+                itemDiv.appendChild(inputsDiv);
+
+                const craftButton = document.createElement('button');
+                craftButton.className = 'button';
+                craftButton.style.padding = '8px 15px';
+                craftButton.style.fontSize = '0.9em';
+                craftButton.style.margin = '0';
+                craftButton.textContent = `Craft (${recipe.craftCost} Bloom Energy)`;
+                craftButton.disabled = !canCraft || player.bloomEnergy < recipe.craftCost;
+                craftButton.onclick = () => craftItem(recipe.id);
+                itemDiv.appendChild(craftButton);
+
+                list.appendChild(itemDiv);
+            });
+        }
+
+        function updateUpgradesDisplay() {
+            const list = document.getElementById('upgradesList');
+            list.innerHTML = '';
+            document.getElementById('currentBloomEnergy').textContent = player.bloomEnergy;
+
+            for (const type in upgradeData) {
+                const upgradeInfo = upgradeData[type];
+                const currentLevel = player.upgrades[type];
+                const nextLevel = currentLevel < upgradeInfo.levels.length ? upgradeInfo.levels[currentLevel] : null;
+
+                const upgradeDiv = document.createElement('div');
+                upgradeDiv.className = 'upgrade-item';
+                upgradeDiv.style.border = `1px solid ${nextLevel ? '#00ffff' : '#888888'}`;
+                upgradeDiv.style.borderRadius = '5px';
+                upgradeDiv.style.padding = '10px';
+                upgradeDiv.style.marginBottom = '10px';
+                upgradeDiv.style.backgroundColor = 'rgba(0,0,0,0.3)';
+                upgradeDiv.style.textAlign = 'left';
+
+                const title = document.createElement('h4');
+                title.style.color = '#aaffff';
+                title.style.margin = '0 0 5px 0';
+                title.textContent = upgradeInfo.name;
+                upgradeDiv.appendChild(title);
+
+                const levelText = document.createElement('p');
+                levelText.style.fontSize = '0.9em';
+                levelText.style.color = '#cccccc';
+                levelText.style.margin = '0 0 5px 0';
+                levelText.textContent = `Current Level: ${currentLevel}`;
+                upgradeDiv.appendChild(levelText);
+
+                const descText = document.createElement('p');
+                descText.style.fontSize = '0.9em';
+                descText.style.color = '#dddddd';
+                descText.style.margin = '0 0 5px 0';
+                if (nextLevel) {
+                    descText.textContent = `Next Level: ${nextLevel.desc}`;
+                } else {
+                    descText.textContent = 'Max Level Reached!';
+                }
+                upgradeDiv.appendChild(descText);
+
+                const upgradeButton = document.createElement('button');
+                upgradeButton.className = 'button';
+                upgradeButton.style.padding = '8px 15px';
+                upgradeButton.style.fontSize = '0.9em';
+                upgradeButton.style.margin = '0';
+                upgradeButton.textContent = nextLevel ? `Upgrade (${nextLevel.cost} Bloom Energy)` : 'Maxed';
+                upgradeButton.disabled = !nextLevel || player.bloomEnergy < nextLevel.cost;
+                upgradeButton.onclick = () => applyUpgrade(type);
+                upgradeDiv.appendChild(upgradeButton);
+
+                list.appendChild(upgradeDiv);
+            }
+        }
+
+        function updateQuestsDisplay() {
+            const list = document.getElementById('questsList');
+            list.innerHTML = '';
+            if (activeQuests.length === 0) {
+                const li = document.createElement('li');
+                li.textContent = 'No active quests.';
+                list.appendChild(li);
+                return;
+            }
+            activeQuests.forEach(quest => {
+                const li = document.createElement('li');
+                li.style.marginBottom = '10px';
+                li.style.borderBottom = '1px dashed #4a4a7a';
+                li.style.paddingBottom = '5px';
+                li.innerHTML = `
+                    <span style="color: ${quest.isCompleted ? '#00ff00' : '#ffff00'};">${quest.description}</span><br>
+                    Progress: ${quest.current}/${quest.required}
+                `;
+                if (quest.isCompleted && !quest.isClaimed) {
+                    const claimButton = document.createElement('button');
+                    claimButton.className = 'button';
+                    claimButton.style.padding = '5px 10px';
+                    claimButton.style.fontSize = '0.8em';
+                    claimButton.style.marginLeft = '10px';
+                    claimButton.textContent = 'Claim Reward';
+                    claimButton.onclick = () => claimQuestReward(quest.id);
+                    li.appendChild(claimButton);
+                }
+                list.appendChild(li);
+            });
+        }
+
+        // --- Game Logic Functions ---
+        function initGame() {
+            // Reset player and game state
+            player.x = worldMap.sectorWidthTiles / 2 * TILE_SIZE;
+            player.y = worldMap.sectorHeightTiles / 2 * TILE_SIZE;
+            player.speed = DEFAULT_PLAYER_SPEED;
+            player.inventory = {};
+            player.battery = BASE_BATTERY_CAPACITY;
+            player.maxBattery = BASE_BATTERY_CAPACITY;
+            player.bloomEnergy = 0;
+            player.upgrades = { speed: 0, battery: 0, cargo: 0, grappleHook: false, energyShield: false };
+            player.maxInventorySlots = MAX_INVENTORY_SLOTS;
+            player.currentSectorId = 0;
+            player.grappleTarget = null;
+            player.grappleActive = false;
+            player.shieldActive = false;
+            player.shieldTimer = 0;
+            player.lastShieldUse = 0;
+
+            gameState.bloomLevel = 0;
+            gameState.totalBloomRequired = TOTAL_BLOOM_REQUIRED_FOR_WIN;
+            gameState.lastSectorShiftTime = 0;
+            gameState.lastSpawnTime = 0;
+
+            // Reset sectors and generate initial content
+            sectors.length = 0; // Clear existing sectors
+            worldMap.grid = Array(SECTOR_GRID_SIZE).fill(0).map(() => Array(SECTOR_GRID_SIZE).fill(null));
+            generateWorldMap();
+            generateInitialSectorContent();
+
+            // Reset quests
+            activeQuests = JSON.parse(JSON.stringify(initialQuests)); // Deep copy
+            addQuest({
+                id: 'q_final_core',
+                description: 'Restore the Core Bloom Chamber (requires Core Stabilizer)',
+                type: QUEST_TYPES.REPAIR, targetType: 'core_component', required: 1, current: 0,
+                rewardBloom: 100, rewardEnergy: 50, isCompleted: false, isClaimed: false
+            });
+
+            // Apply loaded game state if any
+            loadGame();
+
+            // Initial camera position
+            camera.x = player.x - gameWidth / 2;
+            camera.y = player.y - gameHeight / 2;
+
+            updateUI();
+        }
+
+        function resetGame(keepSave = false) {
+            cancelAnimationFrame(animationFrameId);
+            if (!keepSave) {
+                localStorage.removeItem('astroBloomBotSave');
+            }
+            // Reset all game state to initial values, then load if keepSave is true
+            // This ensures a clean slate before loading
+            player.x = 0; player.y = 0; player.dx = 0; player.dy = 0;
+            player.speed = DEFAULT_PLAYER_SPEED;
+            player.inventory = {};
+            player.maxInventorySlots = MAX_INVENTORY_SLOTS;
+            player.battery = BASE_BATTERY_CAPACITY;
+            player.maxBattery = BASE_BATTERY_CAPACITY;
+            player.bloomEnergy = 0;
+            player.upgrades = { speed: 0, battery: 0, cargo: 0, grappleHook: false, energyShield: false };
+            player.currentSectorId = 0;
+            player.grappleTarget = null;
+            player.grappleActive = false;
+            player.shieldActive = false;
+            player.shieldTimer = 0;
+            player.lastShieldUse = 0;
+
+            gameState.currentScreen = 'title';
+            gameState.isPaused = false;
+            gameState.shakeTime = 0;
+            gameState.shakeOffset = { x: 0, y: 0 };
+            gameState.lastSectorShiftTime = 0;
+            gameState.lastSpawnTime = 0;
+            gameState.bloomLevel = 0;
+            gameState.totalBloomRequired = TOTAL_BLOOM_REQUIRED_FOR_WIN;
+
+            particles.length = 0;
+            activeQuests.length = 0;
+            sectors.length = 0;
+            worldMap.grid = Array(SECTOR_GRID_SIZE).fill(0).map(() => Array(SECTOR_GRID_SIZE).fill(null));
+            worldMap.sectorCount = 0;
+            worldMap.connections = [];
+
+            // If we're showing the title, ensure UI is updated.
+            // If we're about to start a new game, initGame will handle the rest.
+            updateUI();
+        }
+
+
+        function generateWorldMap() {
+            worldMap.sectorCount = 0;
+            worldMap.connections = [];
+
+            // Place initial sector (0) in the center
+            const startMapX = Math.floor(SECTOR_GRID_SIZE / 2);
+            const startMapY = Math.floor(SECTOR_GRID_SIZE / 2);
+            addSector(0, startMapX, startMapY, true); // Sector 0 is unlocked by default
+
+            // Randomly add more sectors around it, ensuring connectivity
+            let sectorsToConnect = [sectors[0]];
+            let addedCount = 1;
+
+            while (addedCount < MAX_SECTORS && sectorsToConnect.length > 0) {
+                const currentSector = sectorsToConnect.shift();
+
+                const possibleDirections = shuffleArray([
+                    { dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }
+                ]);
+
+                for (const dir of possibleDirections) {
+                    const newMapX = currentSector.mapX + dir.dx;
+                    const newMapY = currentSector.mapY + dir.dy;
+
+                    if (newMapX >= 0 && newMapX < SECTOR_GRID_SIZE &&
+                        newMapY >= 0 && newMapY < SECTOR_GRID_SIZE &&
+                        worldMap.grid[newMapY][newMapX] === null &&
+                        addedCount < MAX_SECTORS)
+                    {
+                        const newSectorId = addedCount;
+                        addSector(newSectorId, newMapX, newMapY, false); // New sectors are locked initially
+                        worldMap.connections.push({
+                            from: { x: currentSector.mapX, y: currentSector.mapY },
+                            to: { x: newMapX, y: newMapY },
+                            type: 'path'
+                        });
+                        sectorsToConnect.push(sectors[newSectorId]);
+                        addedCount++;
+                    }
+                }
+            }
+        }
+
+        function addSector(id, mapX, mapY, isUnlocked) {
+            const grid = [];
+            for (let y = 0; y < worldMap.sectorHeightTiles; y++) {
+                grid[y] = [];
+                for (let x = 0; x < worldMap.sectorWidthTiles; x++) {
+                    grid[y][x] = (Math.random() < 0.15) ? 1 : 0; // 15% chance for obstacle
+                }
+            }
+
+            const newSector = {
+                id: id,
+                name: `Sector ${id}`,
+                grid: grid,
+                mapX: mapX,
+                mapY: mapY,
+                offsetX: mapX * worldMap.sectorWidthTiles * TILE_SIZE,
+                offsetY: mapY * worldMap.sectorHeightTiles * TILE_SIZE,
+                widthTiles: worldMap.sectorWidthTiles,
+                heightTiles: worldMap.sectorHeightTiles,
+                rotation: 0, // In degrees
+                isUnlocked: isUnlocked,
+                damagedElements: [],
+                resourceNodes: [],
+                warpPoints: [],
+            };
+            sectors.push(newSector);
+            worldMap.grid[mapY][mapX] = id;
+            worldMap.sectorCount++;
+        }
+
+        function generateInitialSectorContent() {
+            sectors.forEach(sector => {
+                // Clear previous content
+                sector.resourceNodes.length = 0;
+                sector.damagedElements.length = 0;
+                sector.warpPoints.length = 0;
+
+                // Add resources and damaged elements
+                for (let y = 0; y < sector.heightTiles; y++) {
+                    for (let x = 0; x < sector.widthTiles; x++) {
+                        if (sector.grid[y][x] === 0) { // Only place on empty tiles
+                            if (Math.random() < RESOURCE_SPAWN_CHANCE) {
+                                const resourceTypeKeys = Object.keys(RESOURCE_TYPES);
+                                const randomResType = resourceTypeKeys[Math.floor(Math.random() * resourceTypeKeys.length)];
+                                sector.resourceNodes.push({
+                                    x, y,
+                                    type: randomResType.toLowerCase(),
+                                    amount: Math.floor(Math.random() * 3) + 1,
+                                    maxAmount: 3
+                                });
+                            }
+                            if (Math.random() < DAMAGED_PLANT_SPAWN_CHANCE) {
+                                const damagedTypeKeys = Object.keys(DAMAGED_TYPES);
+                                const randomDamagedType = damagedTypeKeys[Math.floor(Math.random() * damagedTypeKeys.length)];
+                                sector.damagedElements.push({
+                                    x, y,
+                                    type: randomDamagedType.toLowerCase(),
+                                    currentHealth: Math.floor(Math.random() * 2) + 1,
+                                    maxHealth: 3
+                                });
+                            }
+                        }
+                    }
+                }
+
+                // Add warp points to connect sectors
+                worldMap.connections.forEach(conn => {
+                    if (conn.from.x === sector.mapX && conn.from.y === sector.mapY) {
+                        const targetSector = sectors.find(s => s.mapX === conn.to.x && s.mapY === conn.to.y);
+                        if (targetSector) {
+                            // Determine edge for warp point
+                            let warpX, warpY, targetX, targetY;
+                            if (conn.to.x > conn.from.x) { // Right connection
+                                warpX = sector.widthTiles - 1; warpY = Math.floor(sector.heightTiles / 2);
+                                targetX = 0; targetY = Math.floor(targetSector.heightTiles / 2);
+                            } else if (conn.to.x < conn.from.x) { // Left connection
+                                warpX = 0; warpY = Math.floor(sector.heightTiles / 2);
+                                targetX = targetSector.widthTiles - 1; targetY = Math.floor(targetSector.heightTiles / 2);
+                            } else if (conn.to.y > conn.from.y) { // Down connection
+                                warpX = Math.floor(sector.widthTiles / 2); warpY = sector.heightTiles - 1;
+                                targetX = Math.floor(targetSector.widthTiles / 2); targetY = 0;
+                            } else { // Up connection
+                                warpX = Math.floor(sector.widthTiles / 2); warpY = 0;
+                                targetX = Math.floor(targetSector.widthTiles / 2); targetY = targetSector.heightTiles - 1;
+                            }
+                            sector.warpPoints.push({ x: warpX, y: warpY, targetSectorId: targetSector.id, targetX, targetY });
+                        }
+                    }
+                });
+            });
+
+            // Ensure Sector 0 has the Core Component for the final quest
+            const coreSector = sectors[0]; // Assume core is in sector 0
+            if (!coreSector.damagedElements.some(el => el.type === 'core_component')) {
+                // Find an empty spot for the core component
+                let placed = false;
+                for (let y = 0; y < coreSector.heightTiles && !placed; y++) {
+                    for (let x = 0; x < coreSector.widthTiles && !placed; x++) {
+                        if (coreSector.grid[y][x] === 0 &&
+                            !coreSector.resourceNodes.some(n => n.x === x && n.y === y) &&
+                            !coreSector.damagedElements.some(d => d.x === x && d.y === y))
+                        {
+                            coreSector.damagedElements.push({
+                                x, y,
+                                type: 'core_component',
+                                currentHealth: 0,
+                                maxHealth: 1 // Needs 1 repair with core stabilizer
+                            });
+                            placed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        function shiftSectors() {
+            // Simple shifting: rotate a random sector and swap positions with an adjacent one
+            const unlockedSectors = sectors.filter(s => s.isUnlocked);
+            if (unlockedSectors.length < 2) return; // Need at least two sectors to shift meaningfully
+
+            const sector1 = unlockedSectors[Math.floor(Math.random() * unlockedSectors.length)];
+            const sector2Candidates = unlockedSectors.filter(s => s.id !== sector1.id && isAdjacent(sector1, s));
+
+            if (sector2Candidates.length === 0) return; // No adjacent sectors to swap with
+            const sector2 = sector2Candidates[Math.floor(Math.random() * sector2Candidates.length)];
+
+            // Swap mapX, mapY, offsetX, offsetY
+            const tempMapX = sector1.mapX;
+            const tempMapY = sector1.mapY;
+            const tempOffsetX = sector1.offsetX;
+            const tempOffsetY = sector1.offsetY;
+
+            sector1.mapX = sector2.mapX;
+            sector1.mapY = sector2.mapY;
+            sector1.offsetX = sector2.offsetX;
+            sector1.offsetY = sector2.offsetY;
+
+            sector2.mapX = tempMapX;
+            sector2.mapY = tempMapY;
+            sector2.offsetX = tempOffsetX;
+            sector2.offsetY = tempOffsetY;
+
+            // Update worldMap grid
+            worldMap.grid[sector1.mapY][sector1.mapX] = sector1.id;
+            worldMap.grid[sector2.mapY][sector2.mapX] = sector2.id;
+
+            // Randomly rotate one of them
+            sector1.rotation = (sector1.rotation + 90 * (Math.floor(Math.random() * 4))) % 360;
+
+            // If player is in one of the shifting sectors, adjust their coordinates
+            // This is a simplified approach; in a complex game, player needs to be attached to the shifting sector's local coordinates
+            if (player.currentSectorId === sector1.id) {
+                player.currentSectorId = sector1.id; // Still in the same sector, but it moved
+                // Player's local coordinates remain, global coords update with sector's offset
+                // This is implicitly handled by drawing relative to sector.offsetX/Y
+            } else if (player.currentSectorId === sector2.id) {
+                player.currentSectorId = sector2.id;
+            }
+
+            console.log(`Sectors ${sector1.id} and ${sector2.id} shifted!`);
+            addParticleBurst(player.x, player.y, 20, '#ffffff'); // Visual feedback
+        }
+
+        function isAdjacent(sectorA, sectorB) {
+            const dx = Math.abs(sectorA.mapX - sectorB.mapX);
+            const dy = Math.abs(sectorA.mapY - sectorB.mapY);
+            return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+        }
+
+
+        function interact() {
+            if (player.grappleActive) { // If grapple is active, pressing action button cancels it
+                player.grappleActive = false;
+                player.grappleTarget = null;
+                playSound('grapple_stop', 200, 0.1, 0.5);
+                return;
+            }
+
+            // If grapple hook is unlocked, and player is not moving, try to grapple
+            if (player.upgrades.grappleHook && player.dx === 0 && player.dy === 0) {
+                const grappleRange = TILE_SIZE * 5; // 5 tiles range
+                const currentSector = sectors[player.currentSectorId];
+
+                let targetX = player.x + player.facing.x * grappleRange;
+                let targetY = player.y + player.facing.y * grappleRange;
+
+                // Adjust target to be relative to sector origin
+                targetX = Math.floor((targetX - currentSector.offsetX) / TILE_SIZE);
+                targetY = Math.floor((targetY - currentSector.offsetY) / TILE_SIZE);
+
+                // Check if target is an obstacle within the current sector
+                if (targetX >= 0 && targetX < currentSector.widthTiles &&
+                    targetY >= 0 && targetY < currentSector.heightTiles &&
+                    currentSector.grid[targetY][targetX] === 1)
+                {
+                    player.grappleTarget = { x: targetX, y: targetY, sectorId: player.currentSectorId };
+                    player.grappleActive = true;
+                    playSound('grapple_start', 880, 0.2, 0.5);
+                    return; // Grapple hook used, don't do other interactions
+                }
+            }
+
+            // If shield is unlocked and not on cooldown, activate shield
+            if (player.upgrades.energyShield && !player.shieldActive && (lastTime - player.lastShieldUse) > player.shieldCooldown) {
+                player.shieldActive = true;
+                player.shieldTimer = player.shieldDuration;
+                player.lastShieldUse = lastTime;
+                playSound('shield_on', 1000, 0.2, 0.5);
+                return;
+            }
+
+            // Normal interaction (gather, repair, warp)
+            if (player.battery < INTERACTION_BATTERY_COST) {
+                playSound('error', 100, 0.1, 0.5, 'square');
+                console.log('Not enough battery to interact!');
+                return;
+            }
+
+            const currentSector = sectors[player.currentSectorId];
+            const playerGridX = Math.floor((player.x - currentSector.offsetX) / TILE_SIZE);
+            const playerGridY = Math.floor((player.y - currentSector.offsetY) / TILE_SIZE);
+
+            // Check for resource nodes
+            const nearbyResource = currentSector.resourceNodes.find(node =>
+                distance(playerGridX, playerGridY, node.x, node.y) < 1.5 && node.amount > 0
+            );
+            if (nearbyResource) {
+                gatherResource(nearbyResource);
+                return;
+            }
+
+            // Check for damaged elements
+            const nearbyDamaged = currentSector.damagedElements.find(element =>
+                distance(playerGridX, playerGridY, element.x, element.y) < 1.5 && element.type !== 'repaired' && element.currentHealth < element.maxHealth
+            );
+            if (nearbyDamaged) {
+                repairElement(nearbyDamaged);
+                return;
+            }
+
+            // Check for warp points
+            const nearbyWarp = currentSector.warpPoints.find(wp =>
+                distance(playerGridX, playerGridY, wp.x, wp.y) < 1.5
+            );
+            if (nearbyWarp) {
+                warpToSector(nearbyWarp);
+                return;
+            }
+
+            playSound('error', 100, 0.1, 0.5, 'square');
+            console.log('Nothing to interact with here.');
+        }
+
+        function gatherResource(node) {
+            if (player.inventory[node.type] === undefined) {
+                player.inventory[node.type] = 0;
+            }
+            if (Object.values(player.inventory).reduce((sum, val) => sum + val, 0) >= player.maxInventorySlots) {
+                console.log("Inventory full!");
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+
+            node.amount--;
+            player.inventory[node.type]++;
+            player.battery -= INTERACTION_BATTERY_COST;
+            playSound('gather', 440, 0.1, 0.5);
+            addParticleBurst(player.x, player.y, 5, RESOURCE_TYPES[node.type.toUpperCase()].color);
+            updateQuestProgress(QUEST_TYPES.GATHER, node.type, 1);
+            updateInventoryDisplay(); // Update UI if menu is open
+            saveGame();
+        }
+
+        function repairElement(element) {
+            const repairCost = DAMAGED_TYPES[element.type.toUpperCase()].cost;
+            let canRepair = true;
+            let requiredItem = null;
+
+            if (element.type === 'core_component') {
+                requiredItem = 'core_stabilizer';
+                if (!player.inventory[requiredItem] || player.inventory[requiredItem] < 1) {
+                    canRepair = false;
+                }
+            } else {
+                for (const resType in repairCost) {
+                    if (player.inventory[resType] === undefined || player.inventory[resType] < repairCost[resType]) {
+                        canRepair = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!canRepair) {
+                console.log('Not enough resources to repair!');
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+
+            if (element.type === 'core_component') {
+                player.inventory[requiredItem]--;
+            } else {
+                for (const resType in repairCost) {
+                    player.inventory[resType] -= repairCost[resType];
+                }
+            }
+
+            element.currentHealth++;
+            player.battery -= INTERACTION_BATTERY_COST;
+            gameState.bloomLevel += DAMAGED_TYPES[element.type.toUpperCase()].reward;
+            playSound('repair', 770, 0.2, 0.7);
+            addParticleBurst(player.x, player.y, 10, '#00ff00');
+            startScreenShake(100, 3);
+
+            if (element.currentHealth >= element.maxHealth) {
+                element.type = 'repaired'; // Mark as fully repaired
+                updateQuestProgress(QUEST_TYPES.REPAIR, element.type, 1); // Track completion
+            }
+            updateInventoryDisplay();
+            updateQuestsDisplay();
+            checkBloomMilestones();
+            saveGame();
+        }
+
+        function warpToSector(warpPoint) {
+            const targetSector = sectors[warpPoint.targetSectorId];
+            if (!targetSector || !targetSector.isUnlocked) {
+                playSound('error', 100, 0.1, 0.5, 'square');
+                console.log("Target sector not unlocked!");
+                return;
+            }
+
+            player.currentSectorId = warpPoint.targetSectorId;
+            player.x = targetSector.offsetX + warpPoint.targetX * TILE_SIZE + TILE_SIZE / 2;
+            player.y = targetSector.offsetY + warpPoint.targetY * TILE_SIZE + TILE_SIZE / 2;
+            playSound('warp', 1000, 0.2, 0.7, 'sawtooth');
+            addParticleBurst(player.x, player.y, 15, '#00ffff');
+            startScreenShake(100, 3);
+            saveGame();
+        }
+
+
+        function addQuest(quest) {
+            if (!activeQuests.some(q => q.id === quest.id)) {
+                activeQuests.push(quest);
+            }
+        }
+
+        function updateQuestProgress(type, targetType, amount) {
+            activeQuests.forEach(quest => {
+                if (quest.type === type && quest.targetType === targetType && !quest.isCompleted) {
+                    quest.current += amount;
+                    if (quest.current >= quest.required) {
+                        quest.current = quest.required;
+                        quest.isCompleted = true;
+                        playSound('quest_complete', 1000, 0.3, 0.8);
+                        addParticleBurst(player.x, player.y, 20, '#ffff00');
+                        console.log(`Quest "${quest.description}" completed!`);
+                    }
+                }
+            });
+            updateQuestsDisplay(); // Update UI if menu is open
+            saveGame();
+        }
+
+        function claimQuestReward(questId) {
+            const quest = activeQuests.find(q => q.id === questId);
+            if (quest && quest.isCompleted && !quest.isClaimed) {
+                player.bloomEnergy += quest.rewardEnergy;
+                gameState.bloomLevel += quest.rewardBloom;
+                quest.isClaimed = true;
+                playSound('reward', 1200, 0.2, 0.7);
+                addParticleBurst(player.x, player.y, 15, '#ffdd00');
+                console.log(`Claimed rewards for quest "${quest.description}"`);
+                updateQuestsDisplay(); // Update UI
+                checkBloomMilestones();
+                saveGame();
+            }
+        }
+
+        function craftItem(recipeId) {
+            const recipe = craftingRecipes.find(r => r.id === recipeId);
+            if (!recipe) {
+                console.error("Recipe not found:", recipeId);
+                return;
+            }
+            if (player.bloomEnergy < recipe.craftCost) {
+                console.log("Not enough Bloom Energy to craft!");
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+            if (!canAfford(player.inventory, recipe.inputs)) {
+                console.log("Not enough resources to craft!");
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+            if (Object.values(player.inventory).reduce((sum, val) => sum + val, 0) >= player.maxInventorySlots) {
+                console.log("Inventory full!");
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+
+            for (const input in recipe.inputs) {
+                player.inventory[input] -= recipe.inputs[input];
+            }
+            for (const output in recipe.outputs) {
+                player.inventory[output] = (player.inventory[output] || 0) + recipe.outputs[output];
+            }
+            player.bloomEnergy -= recipe.craftCost;
+
+            playSound('craft', 990, 0.2, 0.7);
+            addParticleBurst(player.x, player.y, 10, '#00ffff');
+            console.log(`Crafted ${recipe.name}`);
+
+            updateQuestProgress(QUEST_TYPES.CRAFT, recipe.id, 1);
+            updateInventoryDisplay();
+            updateCraftingDisplay();
+            updateUpgradesDisplay(); // Crafting some items might unlock upgrades
+            saveGame();
+        }
+
+        function applyUpgrade(type) {
+            const upgradeInfo = upgradeData[type];
+            const currentLevel = player.upgrades[type];
+            const nextLevel = currentLevel < upgradeInfo.levels.length ? upgradeInfo.levels[currentLevel] : null;
+
+            if (!nextLevel) {
+                console.log("Max level reached for this upgrade.");
+                return;
+            }
+            if (player.bloomEnergy < nextLevel.cost) {
+                console.log("Not enough Bloom Energy for this upgrade!");
+                playSound('error', 100, 0.1, 0.5, 'square');
+                return;
+            }
+
+            player.bloomEnergy -= nextLevel.cost;
+            player.upgrades[type]++;
+
+            // Apply specific effects
+            if (type === 'speed') {
+                player.speed += nextLevel.effect;
+            } else if (type === 'battery') {
+                player.maxBattery += nextLevel.effect;
+                player.battery = Math.min(player.battery + nextLevel.effect, player.maxBattery); // Also restore some battery
+            } else if (type === 'cargo') {
+                player.maxInventorySlots += nextLevel.effect;
+            } else if (type === 'grappleHook' || type === 'energyShield') {
+                player.upgrades[type] = nextLevel.effect; // Set to true
+            }
+
+            playSound('upgrade', 1100, 0.2, 0.7);
+            addParticleBurst(player.x, player.y, 15, '#ffdd00');
+            console.log(`Upgraded ${upgradeInfo.name} to level ${player.upgrades[type]}`);
+            updateUpgradesDisplay();
+            saveGame();
+        }
+
+        function checkBloomMilestones() {
+            // Unlock new sectors based on Bloom Level
+            sectors.forEach(sector => {
+                if (!sector.isUnlocked && gameState.bloomLevel >= (sector.id * 100)) { // Simple unlocking logic
+                    sector.isUnlocked = true;
+                    console.log(`Sector ${sector.id} unlocked!`);
+                    playSound('sector_unlock', 1300, 0.3, 0.8, 'triangle');
+                    addParticleBurst(player.x, player.y, 30, '#00ff00');
+                    startScreenShake(200, 8);
+                }
+            });
+
+            // If max Bloom Level reached, trigger win condition
+            if (gameState.bloomLevel >= gameState.totalBloomRequired) {
+                winGame();
+            }
+            saveGame();
+        }
+
+        function winGame() {
+            if (gameState.currentScreen === 'win') return; // Prevent multiple calls
+            showScreen('win');
+            playSound('win', 1500, 1.5, 1.0, 'triangle');
+            saveGame();
+        }
+
+        function gameOver(reason) {
+            if (gameState.currentScreen === 'lose') return; // Prevent multiple calls
+            console.log("Game Over! Reason:", reason);
+            showScreen('lose');
+            playSound('lose', 80, 1.5, 1.0, 'square');
+            saveGame();
+        }
+
+        // --- Utility Functions ---
+        function distance(x1, y1, x2, y2) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        function canAfford(inventory, costs) {
+            for (const item in costs) {
+                if (inventory[item] === undefined || inventory[item] < costs[item]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function addParticleBurst(x, y, count, color) {
+            for (let i = 0; i < count; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 50 + 20;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: Math.random() * 0.5 + 0.3, // seconds
+                    size: Math.random() * 3 + 1,
+                    color: color
+                });
+            }
+        }
+
+        function startScreenShake(duration, intensity) {
+            gameState.shakeTime = duration;
+            // SHAKE_INTENSITY is already defined globally.
+            // This function just sets the duration.
+        }
+
+        function darkenColor(hex, percent) {
+            let r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+
+            r = Math.floor(r * (1 - percent));
+            g = Math.floor(g * (1 - percent));
+            b = Math.floor(b * (1 - percent));
+
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        function lightenColor(hex, percent) {
+            let r = parseInt(hex.slice(1, 3), 16),
+                g = parseInt(hex.slice(3, 5), 16),
+                b = parseInt(hex.slice(5, 7), 16);
+
+            r = Math.floor(r * (1 + percent));
+            g = Math.floor(g * (1 + percent));
+            b = Math.floor(b * (1 + percent));
+
+            r = Math.min(255, r);
+            g = Math.min(255, g);
+            b = Math.min(255, b);
+
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- Save/Load Game ---
+        function saveGame() {
+            const saveData = {
+                player: player,
+                gameState: gameState,
+                sectors: sectors,
+                activeQuests: activeQuests,
+                lastTime: lastTime, // Save lastTime to correctly calculate deltaTime on load
+            };
+            localStorage.setItem('astroBloomBotSave', JSON.stringify(saveData));
+            console.log('Game Saved!');
+        }
+
+        function loadGame() {
+            const savedData = localStorage.getItem('astroBloomBotSave');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                // Restore player state
+                Object.assign(player, data.player);
+
+                // Restore game state
+                Object.assign(gameState, data.gameState);
+
+                // Restore sectors
+                sectors.length = 0;
+                data.sectors.forEach(s => sectors.push(s));
+                // Re-populate worldMap.grid based on loaded sectors
+                worldMap.grid = Array(SECTOR_GRID_SIZE).fill(0).map(() => Array(SECTOR_GRID_SIZE).fill(null));
+                sectors.forEach(s => {
+                    if (s.mapX >= 0 && s.mapX < SECTOR_GRID_SIZE && s.mapY >= 0 && s.mapY < SECTOR_GRID_SIZE) {
+                        worldMap.grid[s.mapY][s.mapX] = s.id;
+                    }
+                });
+
+
+                // Restore active quests
+                activeQuests.length = 0;
+                data.activeQuests.forEach(q => activeQuests.push(q));
+
+                lastTime = data.lastTime || performance.now(); // Restore lastTime or use current
+                console.log('Game Loaded!');
+                showScreen('game'); // Immediately jump into game if loaded successfully
+                updateUI();
+                return true;
+            }
+            console.log('No saved game found.');
+            return false;
+        }
+
+        // --- Event Listeners & Initialization ---
+        function setupInputListeners() {
+            document.addEventListener('keydown', (e) => {
+                input.keys[e.key.toLowerCase()] = true;
+                if (e.key === 'Escape' || e.key === 'm' || e.key === 'M') {
+                    if (gameState.currentScreen === 'game') {
+                        showPauseScreen();
+                    } else if (gameState.isPaused && gameState.currentScreen === 'pause') {
+                        resumeGame();
+                    } else if (gameState.isPaused) { // In other menus accessible from pause
+                        showPauseScreen();
+                    }
+                }
+                if (e.key === 'e' || e.key === 'E') {
+                    input.actionPressed = true;
+                    if (gameState.currentScreen === 'game' && !gameState.isPaused) {
+                        interact();
+                    }
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                input.keys[e.key.toLowerCase()] = false;
+                if (e.key === 'e' || e.key === 'E') {
+                    input.actionPressed = false;
+                }
+            });
+
+            // Mobile Controls
+            const actionButton = document.getElementById('actionButton');
+            actionButton.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                initAudio(); // User interaction
+                input.actionPressed = true;
+                actionButton.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+                if (gameState.currentScreen === 'game' && !gameState.isPaused) {
+                    interact();
+                }
+            });
+            actionButton.addEventListener('pointerup', (e) => {
+                e.preventDefault();
+                input.actionPressed = false;
+                actionButton.style.backgroundColor = 'rgba(42, 42, 96, 0.7)';
+            });
+            actionButton.addEventListener('pointerleave', (e) => { // For swipe off button
+                input.actionPressed = false;
+                actionButton.style.backgroundColor = 'rgba(42, 42, 96, 0.7)';
+            });
+
+            const menuButton = document.getElementById('menuButton');
+            menuButton.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                initAudio();
+                menuButton.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+                if (gameState.currentScreen === 'game') {
+                    showPauseScreen();
+                } else if (gameState.isPaused && gameState.currentScreen === 'pause') {
+                    resumeGame();
+                } else if (gameState.isPaused) {
+                    showPauseScreen();
+                }
+            });
+            menuButton.addEventListener('pointerup', (e) => {
+                e.preventDefault();
+                menuButton.style.backgroundColor = 'rgba(42, 42, 96, 0.7)';
+            });
+
+            const soundButton = document.getElementById('soundButton');
+            soundButton.innerHTML = gameState.isMuted ? '🔇' : '♪'; // Initial state
+            soundButton.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                initAudio();
+                soundButton.style.backgroundColor = 'rgba(0, 255, 255, 0.5)';
+                toggleMute();
+            });
+            soundButton.addEventListener('pointerup', (e) => {
+                e.preventDefault();
+                soundButton.style.backgroundColor = 'rgba(42, 42, 96, 0.7)';
+            });
+
+            const dirControls = document.getElementById('direction-controls');
+            dirControls.addEventListener('pointerdown', (e) => {
+                e.preventDefault(); // Prevent scrolling
+                initAudio();
+                const target = e.target.closest('.control-button.dir');
+                if (target) {
+                    target.style.backgroundColor = 'rgba(0, 255, 255, 0.2)';
+                    const dir = target.dataset.dir;
+                    if (dir === 'up') input.keys['w'] = true;
+                    if (dir === 'down') input.keys['s'] = true;
+                    if (dir === 'left') input.keys['a'] = true;
+                    if (dir === 'right') input.keys['d'] = true;
+                }
+            });
+            dirControls.addEventListener('pointerup', (e) => {
+                e.preventDefault();
+                const target = e.target.closest('.control-button.dir');
+                if (target) {
+                    target.style.backgroundColor = 'rgba(42, 42, 96, 0.5)';
+                    const dir = target.dataset.dir;
+                    if (dir === 'up') input.keys['w'] = false;
+                    if (dir === 'down') input.keys['s'] = false;
+                    if (dir === 'left') input.keys['a'] = false;
+                    if (dir === 'right') input.keys['d'] = false;
+                }
+            });
+            dirControls.addEventListener('pointercancel', (e) => { // When touch leaves the area
+                e.preventDefault();
+                document.querySelectorAll('#direction-controls .control-button.dir').forEach(btn => {
+                    btn.style.backgroundColor = 'rgba(42, 42, 96, 0.5)';
+                });
+                input.keys['w'] = input.keys['s'] = input.keys['a'] = input.keys['d'] = false;
+            });
+            dirControls.addEventListener('pointerleave', (e) => { // When touch leaves the area
+                e.preventDefault();
+                document.querySelectorAll('#direction-controls .control-button.dir').forEach(btn => {
+                    btn.style.backgroundColor = 'rgba(42, 42, 96, 0.5)';
+                });
+                input.keys['w'] = input.keys['s'] = input.keys['a'] = input.keys['d'] = false;
+            });
+        }
+
+        function isMobileDevice() {
+            return /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (navigator.maxTouchPoints > 0);
+        }
+
+        function resizeCanvas() {
+            const aspectRatio = 16 / 9; // Desired aspect ratio
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            let newWidth = windowWidth;
+            let newHeight = windowWidth / aspectRatio;
+
+            if (newHeight > windowHeight) {
+                newHeight = windowHeight;
+                newWidth = windowHeight * aspectRatio;
+            }
+
+            canvas.width = gameWidth = newWidth;
+            canvas.height = gameHeight = newHeight;
+            draw(); // Redraw immediately after resize
+        }
+
+        function updateUI() {
+            // This function ensures all UI elements reflect the current game state
+            document.getElementById('muteButton').textContent = gameState.isMuted ? 'Unmute Sound' : 'Mute Sound';
+            document.getElementById('soundButton').innerHTML = gameState.isMuted ? '🔇' : '♪';
+            drawUIScreens(); // Re-render visibility of screens
+            if (gameState.currentScreen === 'inventory') updateInventoryDisplay();
+            if (gameState.currentScreen === 'inventory') updateCraftingDisplay();
+            if (gameState.currentScreen === 'upgrades') updateUpgradesDisplay();
+            if (gameState.currentScreen === 'quests') updateQuestsDisplay();
+        }
+
+        window.onload = () => {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            setupInputListeners();
+            showScreen('title'); // Start at the title screen
+            gameLoop(0); // Start the game loop
+        };
+    </script>
+</body>
+</html>

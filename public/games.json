@@ -1,5 +1,15 @@
 [
   {
+    "title": "AstroBloom Bot",
+    "slug": "2026-06-17-astro-bloom-bot",
+    "description": "Guide a tiny repair bot through a procedurally shifting space garden, collecting resources, crafting tools, and completing quests to restore its vibrant ecosystem.",
+    "genre": "Top-Down Exploration & Crafting Adventure",
+    "date": "2026-06-17",
+    "url": "/games/2026-06-17-astro-bloom-bot/",
+    "createdAt": "2026-06-17T14:28:14.914Z",
+    "generatorModel": "gemini-2.5-flash"
+  },
+  {
     "title": "Pulse Orbit",
     "slug": "demo-pulse-orbit",
     "description": "Guide a living energy core through eight unstable sectors, gather fragments, choose upgrades, and restore the final orbit.",
