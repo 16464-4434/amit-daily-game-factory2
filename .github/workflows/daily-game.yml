@@ -1,115 +1,183 @@
-name: Amit Game Factory V2
+import fs from 'node:fs/promises';
+import tls from 'node:tls';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-on:
-  workflow_dispatch:
-  schedule:
-    # Two games every day, automatically adjusted for Israel daylight-saving time.
-    # Odd minutes reduce the chance of GitHub's top-of-hour scheduling delays.
-    - cron: "17 9 * * *"
-      timezone: "Asia/Jerusalem"
-    - cron: "43 18 * * *"
-      timezone: "Asia/Jerusalem"
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
+const PUBLIC_DIR = path.join(ROOT, 'public');
 
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+function requiredEnv(name) {
+  const value = process.env[name]?.trim();
+  if (!value) throw new Error(`Missing required environment variable: ${name}`);
+  return value;
+}
 
-concurrency:
-  group: amit-game-factory-v2
-  cancel-in-progress: false
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
 
-jobs:
-  create-publish-email:
-    runs-on: ubuntu-latest
-    timeout-minutes: 55
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GEMINI_MODEL: gemini-2.5-flash
-      GMAIL_USER: ${{ secrets.GMAIL_USER }}
-      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-      EMAIL_TO: ${{ secrets.EMAIL_TO }}
-      MIN_GAME_SIZE: "26000"
-      MIN_QUALITY_SCORE: "78"
-      QUALITY_IMPROVEMENT_ATTEMPTS: "1"
+function encodeHeader(value) {
+  return `=?UTF-8?B?${Buffer.from(String(value), 'utf8').toString('base64')}?=`;
+}
 
-    steps:
-      - name: Download the project
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+function chunkBase64(value) {
+  return Buffer.from(value, 'utf8').toString('base64').match(/.{1,76}/g)?.join('\r\n') || '';
+}
 
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+function dotStuff(value) {
+  return value.replace(/\r?\n/g, '\r\n').replace(/^\./gm, '..');
+}
 
-      - name: Calculate the GitHub Pages address
-        shell: bash
-        run: |
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          echo "SITE_URL=https://${GITHUB_REPOSITORY_OWNER}.github.io/${REPO_NAME}" >> "$GITHUB_ENV"
+class SmtpClient {
+  constructor(host, port) {
+    this.host = host;
+    this.port = port;
+    this.socket = null;
+    this.buffer = '';
+    this.waiters = [];
+  }
 
-      - name: Check required secrets
-        shell: bash
-        run: |
-          missing=0
-          for name in GEMINI_API_KEY GMAIL_USER GMAIL_APP_PASSWORD EMAIL_TO; do
-            if [ -z "${!name}" ]; then
-              echo "Missing GitHub Secret: $name"
-              missing=1
-            fi
-          done
-          if [ "$missing" -ne 0 ]; then
-            exit 1
-          fi
+  async connect() {
+    this.socket = tls.connect({
+      host: this.host,
+      port: this.port,
+      servername: this.host,
+      minVersion: 'TLSv1.2'
+    });
 
-      - name: Install dependencies
-        run: npm ci
+    this.socket.setEncoding('utf8');
+    this.socket.on('data', chunk => {
+      this.buffer += chunk;
+      this.flush();
+    });
+    this.socket.on('error', error => {
+      while (this.waiters.length) this.waiters.shift().reject(error);
+    });
 
-      - name: Design, build, review, and improve a new game
-        run: npm run generate
+    await new Promise((resolve, reject) => {
+      this.socket.once('secureConnect', resolve);
+      this.socket.once('error', reject);
+    });
 
-      - name: Validate the complete gallery
-        run: npm run validate
+    await this.readResponse([220]);
+  }
 
-      - name: Save the new game in GitHub
-        shell: bash
-        run: |
-          git config user.name "Amit Game Factory"
-          git config user.email "actions@users.noreply.github.com"
-          git add public
-          git diff --cached --quiet || git commit -m "Add V2 game $(date -u +%F-%H%M)"
-          git push
+  flush() {
+    while (this.waiters.length) {
+      const match = this.buffer.match(/^(?:\d{3}-.*\r?\n)*(\d{3}) ([^\r\n]*)(?:\r?\n|$)/m);
+      if (!match) return;
 
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+      const end = match.index + match[0].length;
+      const raw = this.buffer.slice(0, end);
+      this.buffer = this.buffer.slice(end);
+      const waiter = this.waiters.shift();
+      const code = Number(match[1]);
 
-      - name: Package the website
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
+      if (waiter.expected.includes(code)) waiter.resolve({ code, raw });
+      else waiter.reject(new Error(`SMTP returned ${code}: ${raw.trim()}`));
+    }
+  }
 
-      - name: Publish with GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+  readResponse(expected) {
+    return new Promise((resolve, reject) => {
+      this.waiters.push({ resolve, reject, expected });
+      this.flush();
+    });
+  }
 
-      - name: Email the new game link
-        env:
-          DEPLOYED_SITE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: npm run email
+  async command(command, expected = [250]) {
+    this.socket.write(`${command}\r\n`);
+    return this.readResponse(expected);
+  }
 
-      - name: Keep debugging files when something fails
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: game-factory-v2-debug-${{ github.run_number }}
-          path: |
-            .automation/
-            public/
-          if-no-files-found: ignore
-          retention-days: 7
+  async close() {
+    if (!this.socket) return;
+    try {
+      await this.command('QUIT', [221]);
+    } catch {}
+    this.socket.end();
+  }
+}
+
+const gmailUser = requiredEnv('GMAIL_USER');
+const gmailAppPassword = requiredEnv('GMAIL_APP_PASSWORD').replaceAll(' ', '');
+const emailTo = process.env.EMAIL_TO?.trim() || gmailUser;
+const deployedBase = (process.env.DEPLOYED_SITE_URL || process.env.SITE_URL || '').trim().replace(/\/$/, '');
+
+if (!deployedBase) {
+  throw new Error('Missing DEPLOYED_SITE_URL or SITE_URL.');
+}
+
+const manifestPath = path.join(PUBLIC_DIR, 'games.json');
+const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8'));
+const latest = Array.isArray(manifest) ? manifest[0] : null;
+
+if (!latest) {
+  throw new Error('No game found in public/games.json.');
+}
+
+const relativeGameUrl = String(latest.url || '').replace(/^\/+/, '');
+const gameUrl = `${deployedBase}/${relativeGameUrl}`;
+const subject = `🎮 משחק חדש: ${latest.title}`;
+const textBody = [
+  `המשחק החדש ${latest.title} מוכן.`,
+  '',
+  `למשחק: ${gameUrl}`,
+  `לגלריה: ${deployedBase}`,
+  '',
+  "Amit's Game Factory"
+].join('\n');
+
+const htmlBody = `
+<div style="font-family:Arial,sans-serif;max-width:650px;margin:auto;padding:30px;background:#0b1020;color:#f5f7ff;border-radius:22px">
+  <div style="font-size:12px;color:#78f4ff;font-weight:800;letter-spacing:1px">AMIT'S GAME FACTORY</div>
+  <h1 style="font-size:31px;margin:14px 0 8px">${escapeHtml(latest.title)}</h1>
+  <p style="color:#bbc5e6;line-height:1.65">${escapeHtml(latest.description || '')}</p>
+  <p><a href="${escapeHtml(gameUrl)}" style="display:inline-block;padding:14px 22px;background:#78f4ff;color:#07101a;text-decoration:none;border-radius:12px;font-weight:900">פתח את המשחק</a></p>
+  <p style="font-size:13px;color:#8793bd">גלריה: <a style="color:#b9c5ff" href="${escapeHtml(deployedBase)}">${escapeHtml(deployedBase)}</a></p>
+</div>`;
+
+const boundary = `amit-email-${Date.now().toString(36)}`;
+const message = [
+  `From: ${encodeHeader("Amit's Game Factory")} <${gmailUser}>`,
+  `To: <${emailTo}>`,
+  `Subject: ${encodeHeader(subject)}`,
+  'MIME-Version: 1.0',
+  `Content-Type: multipart/alternative; boundary="${boundary}"`,
+  '',
+  `--${boundary}`,
+  'Content-Type: text/plain; charset=UTF-8',
+  'Content-Transfer-Encoding: base64',
+  '',
+  chunkBase64(textBody),
+  `--${boundary}`,
+  'Content-Type: text/html; charset=UTF-8',
+  'Content-Transfer-Encoding: base64',
+  '',
+  chunkBase64(htmlBody),
+  `--${boundary}--`,
+  ''
+].join('\r\n');
+
+const smtp = new SmtpClient('smtp.gmail.com', 465);
+
+try {
+  await smtp.connect();
+  await smtp.command('EHLO github-actions', [250]);
+  await smtp.command('AUTH LOGIN', [334]);
+  await smtp.command(Buffer.from(gmailUser).toString('base64'), [334]);
+  await smtp.command(Buffer.from(gmailAppPassword).toString('base64'), [235]);
+  await smtp.command(`MAIL FROM:<${gmailUser}>`, [250]);
+  await smtp.command(`RCPT TO:<${emailTo}>`, [250, 251]);
+  await smtp.command('DATA', [354]);
+  smtp.socket.write(`${dotStuff(message)}\r\n.\r\n`);
+  await smtp.readResponse([250]);
+  console.log(`Email sent to ${emailTo}: ${gameUrl}`);
+} finally {
+  await smtp.close();
+}
