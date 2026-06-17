@@ -1,0 +1,22 @@
+{
+  "name": "amit-daily-game-factory",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "AI automation that creates a substantial browser game, deploys it to Netlify, and emails the link.",
+  "scripts": {
+    "generate": "node scripts/generate-game.mjs",
+    "validate": "node scripts/validate-site.mjs",
+    "deploy": "node scripts/deploy-netlify.mjs",
+    "email": "node scripts/send-email.mjs",
+    "run-all": "node scripts/run-all.mjs",
+    "test": "node scripts/validate-site.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "nodemailer": "^9.0.0"
+  }
+}
