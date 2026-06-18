@@ -1,199 +1,191 @@
 name: Amit Game Factory V3
 
 on:
-workflow_dispatch: {}
-schedule:
-- cron: "17 6 * * *"
-- cron: "43 15 * * *"
+  workflow_dispatch: {}
+  schedule:
+    - cron: "17 6 * * *"
+    - cron: "43 15 * * *"
 
 permissions:
-contents: write
-pages: write
-id-token: write
+  contents: write
+  pages: write
+  id-token: write
 
 concurrency:
-group: amit-game-factory-v3
-cancel-in-progress: false
+  group: amit-game-factory-v3
+  cancel-in-progress: false
 
 jobs:
-generate:
-name: Create and validate game
-runs-on: ubuntu-latest
-timeout-minutes: 25
+  generate:
+    name: Create and validate game
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
 
-```
-env:
-  GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-  GEMINI_MODEL: gemini-2.5-flash
-  GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
-  GITHUB_REPOSITORY: ${{ github.repository }}
-
-steps:
-  - name: Download project
-    uses: actions/checkout@v4
-    with:
-      fetch-depth: 0
-
-  - name: Use Node.js 20
-    uses: actions/setup-node@v4
-    with:
-      node-version: 20
-
-  - name: Generate a verified game
-    run: npm run generate
-
-  - name: Validate gallery and games
-    run: npm run validate
-
-  - name: Save new game in GitHub
-    shell: bash
-    run: |
-      git config user.name "Amit Game Factory"
-      git config user.email "actions@users.noreply.github.com"
-      git add public
-      git diff --cached --quiet || git commit -m "Add V3 game $(date -u +%F-%H%M)"
-      git push
-
-  - name: Package site for publishing
-    uses: actions/upload-artifact@v4
-    with:
-      name: amit-game-site-${{ github.run_id }}
-      path: public
-      if-no-files-found: error
-      retention-days: 2
-      include-hidden-files: true
-
-  - name: Save debugging files after failure
-    if: failure()
-    uses: actions/upload-artifact@v4
-    with:
-      name: amit-v3-debug-${{ github.run_number }}
-      path: |
-        .automation/
-        public/
-      if-no-files-found: ignore
-      retention-days: 7
-      include-hidden-files: true
-```
-
-deploy_pages:
-name: Publish to GitHub Pages
-needs: generate
-runs-on: ubuntu-latest
-timeout-minutes: 15
-
-```
-environment:
-  name: github-pages
-  url: ${{ steps.deployment.outputs.page_url }}
-
-outputs:
-  page_url: ${{ steps.deployment.outputs.page_url }}
-
-steps:
-  - name: Download generated site
-    uses: actions/download-artifact@v4
-    with:
-      name: amit-game-site-${{ github.run_id }}
-      path: public
-
-  - name: Configure GitHub Pages
-    uses: actions/configure-pages@v5
-
-  - name: Package GitHub Pages artifact
-    uses: actions/upload-pages-artifact@v3
-    with:
-      path: public
-
-  - name: Publish to GitHub Pages
-    id: deployment
-    uses: actions/deploy-pages@v4
-```
-
-deploy_netlify_fallback:
-name: Netlify backup
-needs:
-- generate
-- deploy_pages
-if: ${{ always() && needs.generate.result == 'success' && needs.deploy_pages.result != 'success' }}
-runs-on: ubuntu-latest
-timeout-minutes: 15
-
-```
-outputs:
-  deploy_url: ${{ steps.netlify.outputs.deploy_url }}
-
-steps:
-  - name: Download project scripts
-    uses: actions/checkout@v4
-
-  - name: Use Node.js 20
-    uses: actions/setup-node@v4
-    with:
-      node-version: 20
-
-  - name: Download generated site
-    uses: actions/download-artifact@v4
-    with:
-      name: amit-game-site-${{ github.run_id }}
-      path: site
-
-  - name: Check Netlify backup secrets
-    shell: bash
     env:
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-    run: |
-      if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
-        echo "Netlify backup secrets are missing."
-        exit 1
-      fi
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: gemini-2.5-flash
+      GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
 
-  - name: Create complete site ZIP
-    shell: bash
-    run: |
-      cd site
-      zip -q -r ../site.zip .
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-  - name: Publish to Netlify backup
-    id: netlify
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Generate a verified game
+        run: npm run generate
+
+      - name: Validate gallery and games
+        run: npm run validate
+
+      - name: Save new game in GitHub
+        shell: bash
+        run: |
+          git config user.name "Amit Game Factory"
+          git config user.email "actions@users.noreply.github.com"
+          git add public
+          git diff --cached --quiet || git commit -m "Add V3 game $(date -u +%F-%H%M)"
+          git push
+
+      - name: Package site for publishing
+        uses: actions/upload-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: public
+          if-no-files-found: error
+          retention-days: 2
+          include-hidden-files: true
+
+      - name: Save debugging files after failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amit-v3-debug-${{ github.run_number }}
+          path: |
+            .automation/
+            public/
+          if-no-files-found: ignore
+          retention-days: 7
+          include-hidden-files: true
+
+  deploy_pages:
+    name: Publish to GitHub Pages
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download generated site
+        uses: actions/download-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: public
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Package GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+  deploy_netlify_fallback:
+    name: Netlify backup
+    needs:
+      - generate
+      - deploy_pages
+    if: ${{ always() && needs.generate.result == 'success' && needs.deploy_pages.result != 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    outputs:
+      deploy_url: ${{ steps.netlify.outputs.deploy_url }}
+
+    steps:
+      - name: Download project scripts
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download generated site
+        uses: actions/download-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: site
+
+      - name: Check Netlify backup secrets
+        shell: bash
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "Netlify backup secrets are missing."
+            exit 1
+          fi
+
+      - name: Create complete site ZIP
+        shell: bash
+        run: |
+          cd site
+          zip -q -r ../site.zip .
+
+      - name: Publish to Netlify backup
+        id: netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: node scripts/deploy-netlify.mjs site.zip
+
+  notify:
+    name: Send game by email
+    needs:
+      - generate
+      - deploy_pages
+      - deploy_netlify_fallback
+    if: ${{ always() && needs.generate.result == 'success' && (needs.deploy_pages.result == 'success' || needs.deploy_netlify_fallback.result == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
     env:
-      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-      NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-    run: node scripts/deploy-netlify.mjs site.zip
-```
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      DEPLOYED_SITE_URL: ${{ needs.deploy_pages.result == 'success' && needs.deploy_pages.outputs.page_url || needs.deploy_netlify_fallback.outputs.deploy_url }}
 
-notify:
-name: Send game by email
-needs:
-- generate
-- deploy_pages
-- deploy_netlify_fallback
-if: ${{ always() && needs.generate.result == 'success' && (needs.deploy_pages.result == 'success' || needs.deploy_netlify_fallback.result == 'success') }}
-runs-on: ubuntu-latest
-timeout-minutes: 10
+    steps:
+      - name: Download latest repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
 
-```
-env:
-  GMAIL_USER: ${{ secrets.GMAIL_USER }}
-  GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-  EMAIL_TO: ${{ secrets.EMAIL_TO }}
-  DEPLOYED_SITE_URL: ${{ needs.deploy_pages.result == 'success' && needs.deploy_pages.outputs.page_url || needs.deploy_netlify_fallback.outputs.deploy_url }}
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-steps:
-  - name: Download latest repository
-    uses: actions/checkout@v4
-    with:
-      ref: main
+      - name: Wait for published site
+        run: sleep 8
 
-  - name: Use Node.js 20
-    uses: actions/setup-node@v4
-    with:
-      node-version: 20
-
-  - name: Wait for published site
-    run: sleep 8
-
-  - name: Email new game link
-    run: npm run email
-```
+      - name: Email new game link
+        run: npm run email
