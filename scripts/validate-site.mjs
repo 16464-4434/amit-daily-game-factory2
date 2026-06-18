@@ -4,21 +4,19 @@ import { GAMES_DIR, PUBLIC_DIR, ensureFolders, readJson, validateGameHtml } from
 
 await ensureFolders();
 const manifest = await readJson(path.join(PUBLIC_DIR, 'games.json'), []);
-const failures = [];
+if (!Array.isArray(manifest) || manifest.length === 0) throw new Error('public/games.json contains no games.');
 
+const seen = new Set();
 for (const game of manifest) {
+  if (!game?.slug || seen.has(game.slug)) throw new Error(`Invalid or duplicate game slug: ${game?.slug}`);
+  seen.add(game.slug);
   const file = path.join(GAMES_DIR, game.slug, 'index.html');
-  try {
-    const html = await fs.readFile(file, 'utf8');
-    const errors = validateGameHtml(html);
-    if (errors.length) failures.push(`${game.slug}: ${errors.join(' | ')}`);
-  } catch (error) {
-    failures.push(`${game.slug}: ${error.message}`);
-  }
+  const html = await fs.readFile(file, 'utf8');
+  const errors = validateGameHtml(html);
+  if (errors.length) throw new Error(`${game.slug}: ${errors.join(' | ')}`);
 }
 
-if (failures.length) {
-  console.error(failures.join('\n'));
-  process.exit(1);
-}
-console.log(`Validated ${manifest.length} game(s) successfully.`);
+const gallery = await fs.readFile(path.join(PUBLIC_DIR, 'index.html'), 'utf8');
+if (!/<title>/i.test(gallery) || !/Game Factory V3/i.test(gallery)) throw new Error('Gallery page is incomplete.');
+if (!await fs.stat(path.join(PUBLIC_DIR, '.nojekyll')).catch(() => null)) throw new Error('Missing public/.nojekyll.');
+console.log(`Validated ${manifest.length} V3 game(s) and the gallery.`);

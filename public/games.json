@@ -1,32 +1,15 @@
 [
   {
-    "title": "Chroma Courier",
-    "slug": "2026-06-17-chroma-courier",
-    "description": "Pilot a nimble drone through a neon-drenched, impossible city, racing against time to deliver packages while surviving an onslaught of disruptive energy pulses.",
-    "genre": "Arcade, Racing, Survival",
-    "date": "2026-06-17",
-    "url": "/games/2026-06-17-chroma-courier/",
-    "createdAt": "2026-06-17T15:13:46.047Z",
-    "generatorModel": "gemini-2.5-flash"
-  },
-  {
-    "title": "AstroBloom Bot",
-    "slug": "2026-06-17-astro-bloom-bot",
-    "description": "Guide a tiny repair bot through a procedurally shifting space garden, collecting resources, crafting tools, and completing quests to restore its vibrant ecosystem.",
-    "genre": "Top-Down Exploration & Crafting Adventure",
-    "date": "2026-06-17",
-    "url": "/games/2026-06-17-astro-bloom-bot/",
-    "createdAt": "2026-06-17T14:28:14.914Z",
-    "generatorModel": "gemini-2.5-flash"
-  },
-  {
-    "title": "Pulse Orbit",
-    "slug": "demo-pulse-orbit",
-    "description": "Guide a living energy core through eight unstable sectors, gather fragments, choose upgrades, and restore the final orbit.",
-    "genre": "Action strategy",
-    "date": "2026-06-16",
-    "url": "/games/demo-pulse-orbit/",
-    "createdAt": "2026-06-16T12:00:00.000Z",
-    "generatorModel": "hand-built demo"
+    "title": "Clockwork Echo",
+    "slug": "2026-06-18-154137-clockwork-echo",
+    "description": "Stabilize a city inside a giant clock, gather time sparks, calm runaway mechanisms, and face the final midnight resonance.",
+    "genre": "Arcade survival",
+    "mode": "pulse",
+    "date": "2026-06-18",
+    "createdAt": "2026-06-18T12:41:37.627Z",
+    "url": "games/2026-06-18-154137-clockwork-echo/",
+    "generatorModel": "local-fallback",
+    "engineScore": 89,
+    "tagline": "Every second becomes a decision."
   }
 ]
