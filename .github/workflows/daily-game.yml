@@ -1,183 +1,201 @@
-import fs from 'node:fs/promises';
-import tls from 'node:tls';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+```yaml
+name: Amit Game Factory V3
 
-const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const PUBLIC_DIR = path.join(ROOT, 'public');
+on:
+  workflow_dispatch:
 
-function requiredEnv(name) {
-  const value = process.env[name]?.trim();
-  if (!value) throw new Error(`Missing required environment variable: ${name}`);
-  return value;
-}
+  schedule:
+    - cron: "17 9 * * *"
+      timezone: "Asia/Jerusalem"
 
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
-}
+    - cron: "43 18 * * *"
+      timezone: "Asia/Jerusalem"
 
-function encodeHeader(value) {
-  return `=?UTF-8?B?${Buffer.from(String(value), 'utf8').toString('base64')}?=`;
-}
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
-function chunkBase64(value) {
-  return Buffer.from(value, 'utf8').toString('base64').match(/.{1,76}/g)?.join('\r\n') || '';
-}
+concurrency:
+  group: amit-game-factory-v3
+  cancel-in-progress: false
 
-function dotStuff(value) {
-  return value.replace(/\r?\n/g, '\r\n').replace(/^\./gm, '..');
-}
+jobs:
+  generate:
+    name: Create and validate game
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
 
-class SmtpClient {
-  constructor(host, port) {
-    this.host = host;
-    this.port = port;
-    this.socket = null;
-    this.buffer = '';
-    this.waiters = [];
-  }
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: gemini-2.5-flash
+      GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
 
-  async connect() {
-    this.socket = tls.connect({
-      host: this.host,
-      port: this.port,
-      servername: this.host,
-      minVersion: 'TLSv1.2'
-    });
+    steps:
+      - name: Download project
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    this.socket.setEncoding('utf8');
-    this.socket.on('data', chunk => {
-      this.buffer += chunk;
-      this.flush();
-    });
-    this.socket.on('error', error => {
-      while (this.waiters.length) this.waiters.shift().reject(error);
-    });
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-    await new Promise((resolve, reject) => {
-      this.socket.once('secureConnect', resolve);
-      this.socket.once('error', reject);
-    });
+      - name: Generate a verified game
+        run: npm run generate
 
-    await this.readResponse([220]);
-  }
+      - name: Validate gallery and games
+        run: npm run validate
 
-  flush() {
-    while (this.waiters.length) {
-      const match = this.buffer.match(/^(?:\d{3}-.*\r?\n)*(\d{3}) ([^\r\n]*)(?:\r?\n|$)/m);
-      if (!match) return;
+      - name: Save new game in GitHub
+        shell: bash
+        run: |
+          git config user.name "Amit Game Factory"
+          git config user.email "actions@users.noreply.github.com"
+          git add public
+          git diff --cached --quiet || git commit -m "Add V3 game $(date -u +%F-%H%M)"
+          git push
 
-      const end = match.index + match[0].length;
-      const raw = this.buffer.slice(0, end);
-      this.buffer = this.buffer.slice(end);
-      const waiter = this.waiters.shift();
-      const code = Number(match[1]);
+      - name: Package site for publishing
+        uses: actions/upload-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: public
+          if-no-files-found: error
+          retention-days: 2
+          include-hidden-files: true
 
-      if (waiter.expected.includes(code)) waiter.resolve({ code, raw });
-      else waiter.reject(new Error(`SMTP returned ${code}: ${raw.trim()}`));
-    }
-  }
+      - name: Save debugging files after failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amit-v3-debug-${{ github.run_number }}
+          path: |
+            .automation/
+            public/
+          if-no-files-found: ignore
+          retention-days: 7
+          include-hidden-files: true
 
-  readResponse(expected) {
-    return new Promise((resolve, reject) => {
-      this.waiters.push({ resolve, reject, expected });
-      this.flush();
-    });
-  }
+  deploy-pages:
+    name: Publish to GitHub Pages
+    needs: generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
-  async command(command, expected = [250]) {
-    this.socket.write(`${command}\r\n`);
-    return this.readResponse(expected);
-  }
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
-  async close() {
-    if (!this.socket) return;
-    try {
-      await this.command('QUIT', [221]);
-    } catch {}
-    this.socket.end();
-  }
-}
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
 
-const gmailUser = requiredEnv('GMAIL_USER');
-const gmailAppPassword = requiredEnv('GMAIL_APP_PASSWORD').replaceAll(' ', '');
-const emailTo = process.env.EMAIL_TO?.trim() || gmailUser;
-const deployedBase = (process.env.DEPLOYED_SITE_URL || process.env.SITE_URL || '').trim().replace(/\/$/, '');
+    steps:
+      - name: Download generated site
+        uses: actions/download-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: public
 
-if (!deployedBase) {
-  throw new Error('Missing DEPLOYED_SITE_URL or SITE_URL.');
-}
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
-const manifestPath = path.join(PUBLIC_DIR, 'games.json');
-const manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8'));
-const latest = Array.isArray(manifest) ? manifest[0] : null;
+      - name: Package GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
 
-if (!latest) {
-  throw new Error('No game found in public/games.json.');
-}
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
-const relativeGameUrl = String(latest.url || '').replace(/^\/+/, '');
-const gameUrl = `${deployedBase}/${relativeGameUrl}`;
-const subject = `🎮 משחק חדש: ${latest.title}`;
-const textBody = [
-  `המשחק החדש ${latest.title} מוכן.`,
-  '',
-  `למשחק: ${gameUrl}`,
-  `לגלריה: ${deployedBase}`,
-  '',
-  "Amit's Game Factory"
-].join('\n');
+  deploy-netlify-fallback:
+    name: Netlify backup
+    needs:
+      - generate
+      - deploy-pages
 
-const htmlBody = `
-<div style="font-family:Arial,sans-serif;max-width:650px;margin:auto;padding:30px;background:#0b1020;color:#f5f7ff;border-radius:22px">
-  <div style="font-size:12px;color:#78f4ff;font-weight:800;letter-spacing:1px">AMIT'S GAME FACTORY</div>
-  <h1 style="font-size:31px;margin:14px 0 8px">${escapeHtml(latest.title)}</h1>
-  <p style="color:#bbc5e6;line-height:1.65">${escapeHtml(latest.description || '')}</p>
-  <p><a href="${escapeHtml(gameUrl)}" style="display:inline-block;padding:14px 22px;background:#78f4ff;color:#07101a;text-decoration:none;border-radius:12px;font-weight:900">פתח את המשחק</a></p>
-  <p style="font-size:13px;color:#8793bd">גלריה: <a style="color:#b9c5ff" href="${escapeHtml(deployedBase)}">${escapeHtml(deployedBase)}</a></p>
-</div>`;
+    if: ${{ always() && needs.generate.result == 'success' && needs.deploy-pages.result != 'success' }}
 
-const boundary = `amit-email-${Date.now().toString(36)}`;
-const message = [
-  `From: ${encodeHeader("Amit's Game Factory")} <${gmailUser}>`,
-  `To: <${emailTo}>`,
-  `Subject: ${encodeHeader(subject)}`,
-  'MIME-Version: 1.0',
-  `Content-Type: multipart/alternative; boundary="${boundary}"`,
-  '',
-  `--${boundary}`,
-  'Content-Type: text/plain; charset=UTF-8',
-  'Content-Transfer-Encoding: base64',
-  '',
-  chunkBase64(textBody),
-  `--${boundary}`,
-  'Content-Type: text/html; charset=UTF-8',
-  'Content-Transfer-Encoding: base64',
-  '',
-  chunkBase64(htmlBody),
-  `--${boundary}--`,
-  ''
-].join('\r\n');
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
-const smtp = new SmtpClient('smtp.gmail.com', 465);
+    outputs:
+      deploy_url: ${{ steps.netlify.outputs.deploy_url }}
 
-try {
-  await smtp.connect();
-  await smtp.command('EHLO github-actions', [250]);
-  await smtp.command('AUTH LOGIN', [334]);
-  await smtp.command(Buffer.from(gmailUser).toString('base64'), [334]);
-  await smtp.command(Buffer.from(gmailAppPassword).toString('base64'), [235]);
-  await smtp.command(`MAIL FROM:<${gmailUser}>`, [250]);
-  await smtp.command(`RCPT TO:<${emailTo}>`, [250, 251]);
-  await smtp.command('DATA', [354]);
-  smtp.socket.write(`${dotStuff(message)}\r\n.\r\n`);
-  await smtp.readResponse([250]);
-  console.log(`Email sent to ${emailTo}: ${gameUrl}`);
-} finally {
-  await smtp.close();
-}
+    steps:
+      - name: Download project scripts
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download generated site
+        uses: actions/download-artifact@v4
+        with:
+          name: amit-game-site-${{ github.run_id }}
+          path: site
+
+      - name: Check Netlify backup secrets
+        shell: bash
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -z "$NETLIFY_AUTH_TOKEN" ] || [ -z "$NETLIFY_SITE_ID" ]; then
+            echo "Netlify backup secrets are missing."
+            exit 1
+          fi
+
+      - name: Create complete site ZIP
+        shell: bash
+        run: |
+          cd site
+          zip -q -r ../site.zip .
+
+      - name: Publish to Netlify backup
+        id: netlify
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: node scripts/deploy-netlify.mjs site.zip
+
+  notify:
+    name: Send game by email
+    needs:
+      - generate
+      - deploy-pages
+      - deploy-netlify-fallback
+
+    if: ${{ always() && needs.generate.result == 'success' && (needs.deploy-pages.result == 'success' || needs.deploy-netlify-fallback.result == 'success') }}
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      GMAIL_USER: ${{ secrets.GMAIL_USER }}
+      GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+      EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      DEPLOYED_SITE_URL: ${{ needs.deploy-pages.result == 'success' && needs.deploy-pages.outputs.page_url || needs.deploy-netlify-fallback.outputs.deploy_url }}
+
+    steps:
+      - name: Download latest repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Use Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Wait for published site
+        run: sleep 8
+
+      - name: Email new game link
+        run: npm run email
+```
