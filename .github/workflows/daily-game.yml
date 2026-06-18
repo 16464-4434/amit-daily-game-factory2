@@ -1,10 +1,10 @@
-nname: Amit Game Factory V3
+name: Amit Game Factory V3
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "17 6 * * *"
-    - cron: "43 15 * * *"
+workflow_dispatch: {}
+schedule:
+- cron: "17 6 * * *"
+- cron: "43 15 * * *"
 
 permissions:
 contents: write
@@ -115,12 +115,11 @@ name: Netlify backup
 needs:
 - generate
 - deploy_pages
-
-```
 if: ${{ always() && needs.generate.result == 'success' && needs.deploy_pages.result != 'success' }}
 runs-on: ubuntu-latest
 timeout-minutes: 15
 
+```
 outputs:
   deploy_url: ${{ steps.netlify.outputs.deploy_url }}
 
@@ -170,12 +169,11 @@ needs:
 - generate
 - deploy_pages
 - deploy_netlify_fallback
-
-```
 if: ${{ always() && needs.generate.result == 'success' && (needs.deploy_pages.result == 'success' || needs.deploy_netlify_fallback.result == 'success') }}
 runs-on: ubuntu-latest
 timeout-minutes: 10
 
+```
 env:
   GMAIL_USER: ${{ secrets.GMAIL_USER }}
   GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
