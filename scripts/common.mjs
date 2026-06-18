@@ -3,12 +3,12 @@ import path from 'node:path';
 import vm from 'node:vm';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import 'dotenv/config';
 
 export const ROOT = fileURLToPath(new URL('..', import.meta.url));
 export const PUBLIC_DIR = path.join(ROOT, 'public');
 export const GAMES_DIR = path.join(PUBLIC_DIR, 'games');
 export const AUTO_DIR = path.join(ROOT, '.automation');
+export const TEMPLATE_DIR = path.join(ROOT, 'templates');
 
 export async function ensureFolders() {
   await fs.mkdir(GAMES_DIR, { recursive: true });
@@ -23,44 +23,43 @@ export function requiredEnv(name) {
 
 export function isoDate(date = new Date()) {
   return new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Asia/Jerusalem',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
+    timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit'
   }).format(date);
 }
 
+export function israelTimeId(date = new Date()) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Jerusalem', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+  }).formatToParts(date);
+  const get = type => parts.find(part => part.type === type)?.value || '';
+  return `${get('year')}-${get('month')}-${get('day')}-${get('hour')}${get('minute')}${get('second')}`;
+}
+
 export function slugify(value) {
-  return String(value)
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 54) || `game-${Date.now()}`;
+  return String(value).normalize('NFKD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 56) || `game-${Date.now()}`;
 }
 
 export function escapeHtml(value) {
-  return String(value)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#039;');
+  return String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
 }
 
 export function deterministicPick(list, seed) {
-  const hash = crypto.createHash('sha256').update(seed).digest();
+  const hash = crypto.createHash('sha256').update(String(seed)).digest();
   return list[hash.readUInt32BE(0) % list.length];
 }
 
+export function seededNumber(seed, min, max) {
+  const hash = crypto.createHash('sha256').update(String(seed)).digest();
+  const n = hash.readUInt32BE(4) / 0xffffffff;
+  return min + (max - min) * n;
+}
+
 export async function readJson(file, fallback) {
-  try {
-    return JSON.parse(await fs.readFile(file, 'utf8'));
-  } catch (error) {
-    if (error.code === 'ENOENT') return fallback;
-    throw error;
-  }
+  try { return JSON.parse(await fs.readFile(file, 'utf8')); }
+  catch (error) { if (error.code === 'ENOENT') return fallback; throw error; }
 }
 
 export async function writeJson(file, data) {
@@ -68,15 +67,13 @@ export async function writeJson(file, data) {
 }
 
 function responseText(payload) {
-  return (payload?.candidates ?? [])
-    .flatMap(candidate => candidate?.content?.parts ?? [])
-    .map(part => part?.text ?? '')
-    .join('')
-    .trim();
+  return (payload?.candidates ?? []).flatMap(candidate => candidate?.content?.parts ?? [])
+    .map(part => part?.text ?? '').join('').trim();
 }
 
-export async function callGemini({ prompt, json = false, temperature = 0.8, maxOutputTokens = 32768 }) {
-  const key = requiredEnv('GEMINI_API_KEY');
+export async function callGemini({ prompt, json = false, temperature = 0.85, maxOutputTokens = 4096 }) {
+  const key = process.env.GEMINI_API_KEY?.trim();
+  if (!key) throw new Error('GEMINI_API_KEY is not configured.');
   const configured = process.env.GEMINI_MODEL?.trim();
   const models = [...new Set([configured, 'gemini-2.5-flash', 'gemini-2.5-flash-lite'].filter(Boolean))];
   let lastError;
@@ -86,113 +83,97 @@ export async function callGemini({ prompt, json = false, temperature = 0.8, maxO
     for (let attempt = 1; attempt <= 3; attempt += 1) {
       try {
         const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
+          method: 'POST', headers: { 'content-type': 'application/json' },
           body: JSON.stringify({
             contents: [{ role: 'user', parts: [{ text: prompt }] }],
             generationConfig: {
-              temperature,
-              maxOutputTokens,
+              temperature, maxOutputTokens,
               ...(json ? { responseMimeType: 'application/json' } : {})
             }
           })
         });
-
         const body = await response.text();
         if (!response.ok) {
-          const message = `Gemini ${model} returned ${response.status}: ${body.slice(0, 600)}`;
-          if ([404, 400].includes(response.status)) {
-            lastError = new Error(message);
-            break;
-          }
+          const message = `Gemini ${model} returned ${response.status}: ${body.slice(0, 700)}`;
+          if ([400, 404].includes(response.status)) { lastError = new Error(message); break; }
           throw new Error(message);
         }
-
-        const payload = JSON.parse(body);
-        const text = responseText(payload);
+        const text = responseText(JSON.parse(body));
         if (!text) throw new Error(`Gemini ${model} returned an empty response.`);
         return { text, model };
       } catch (error) {
         lastError = error;
-        if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 1500));
+        if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 1800));
       }
     }
   }
-
   throw lastError ?? new Error('All Gemini model attempts failed.');
 }
 
 export function parseJsonLoose(text) {
-  const cleaned = text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
-  try {
-    return JSON.parse(cleaned);
-  } catch {
+  const cleaned = String(text).trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '');
+  try { return JSON.parse(cleaned); }
+  catch {
     const first = cleaned.indexOf('{');
     const last = cleaned.lastIndexOf('}');
     if (first >= 0 && last > first) return JSON.parse(cleaned.slice(first, last + 1));
-    throw new Error('Could not parse Gemini JSON response.');
+    throw new Error('Could not parse JSON response.');
   }
 }
 
-export function extractGameHtml(text) {
-  const marker = text.match(/===GAME_HTML_START===\s*([\s\S]*?)\s*===GAME_HTML_END===/i);
-  let html = marker?.[1]?.trim();
-  if (!html) {
-    const fenced = text.match(/```html\s*([\s\S]*?)```/i);
-    html = fenced?.[1]?.trim();
-  }
-  if (!html && /<!doctype html/i.test(text)) {
-    html = text.slice(text.search(/<!doctype html/i)).trim();
-  }
-  if (!html) throw new Error('The AI response did not contain a complete HTML game.');
-  return html;
+export function safeHex(value, fallback) {
+  return /^#[0-9a-f]{6}$/i.test(String(value || '')) ? String(value) : fallback;
+}
+
+export function sanitizeConfig(raw, fallback) {
+  const modes = ['pulse', 'dash', 'tether'];
+  const stageNames = Array.isArray(raw?.stageNames) ? raw.stageNames.map(String).filter(Boolean).slice(0, 8) : [];
+  while (stageNames.length < 8) stageNames.push(fallback.stageNames[stageNames.length]);
+  return {
+    title: String(raw?.title || fallback.title).slice(0, 48),
+    slug: slugify(raw?.slug || raw?.title || fallback.slug),
+    description: String(raw?.description || fallback.description).slice(0, 220),
+    genre: String(raw?.genre || fallback.genre).slice(0, 50),
+    mode: modes.includes(raw?.mode) ? raw.mode : fallback.mode,
+    world: String(raw?.world || fallback.world).slice(0, 120),
+    playerName: String(raw?.playerName || fallback.playerName).slice(0, 30),
+    collectible: String(raw?.collectible || fallback.collectible).slice(0, 24),
+    enemyName: String(raw?.enemyName || fallback.enemyName).slice(0, 24),
+    bossName: String(raw?.bossName || fallback.bossName).slice(0, 36),
+    actionName: String(raw?.actionName || fallback.actionName).slice(0, 16).toUpperCase(),
+    specialName: String(raw?.specialName || fallback.specialName).slice(0, 16).toUpperCase(),
+    tagline: String(raw?.tagline || fallback.tagline).slice(0, 100),
+    accent: safeHex(raw?.accent, fallback.accent),
+    accent2: safeHex(raw?.accent2, fallback.accent2),
+    danger: safeHex(raw?.danger, fallback.danger),
+    stageNames,
+    designNotes: Array.isArray(raw?.designNotes) ? raw.designNotes.map(String).slice(0, 5) : fallback.designNotes
+  };
 }
 
 export function validateGameHtml(html) {
   const errors = [];
-  const minSize = Number(process.env.MIN_GAME_SIZE || 18000);
-  if (html.length < minSize) errors.push(`Game is too small (${html.length} chars; minimum ${minSize}).`);
+  if (html.length < 18000) errors.push(`Game is too small (${html.length} chars).`);
   if (!/<!doctype html/i.test(html)) errors.push('Missing <!doctype html>.');
-  if (!/<canvas[\s>]/i.test(html)) errors.push('Missing a canvas element.');
-  if (!/requestAnimationFrame\s*\(/.test(html)) errors.push('Missing requestAnimationFrame game loop.');
-  if (!/localStorage/.test(html)) errors.push('Missing localStorage progress saving.');
-  if (!/(touchstart|pointerdown)/.test(html)) errors.push('Missing touch or pointer controls.');
-  if (!/(pause|paused)/i.test(html)) errors.push('Missing pause system.');
-  if (/<iframe[\s>]/i.test(html)) errors.push('iframes are not allowed.');
-  if (/<script[^>]+src\s*=|<img[^>]+src\s*=\s*["']https?:/i.test(html)) errors.push('External scripts/images are not allowed.');
+  if (!/<canvas[\s>]/i.test(html)) errors.push('Missing canvas.');
+  if (!/requestAnimationFrame\s*\(/.test(html)) errors.push('Missing requestAnimationFrame loop.');
+  if (!/localStorage/.test(html)) errors.push('Missing localStorage saving.');
+  if (!/(pointerdown|touchstart)/.test(html)) errors.push('Missing mobile controls.');
+  if (!/(AudioContext|webkitAudioContext)/.test(html)) errors.push('Missing generated Web Audio.');
+  if (!/(upgrade|perk)/i.test(html)) errors.push('Missing upgrade system.');
+  if (!/(boss|final)/i.test(html)) errors.push('Missing final boss/challenge.');
+  if (/<script[^>]+src\s*=|<iframe[\s>]/i.test(html)) errors.push('External scripts or iframes are not allowed.');
   if (/fetch\s*\(\s*["']https?:/i.test(html)) errors.push('External network calls are not allowed.');
-  if (/\b(eval|document\.write)\s*\(/.test(html)) errors.push('Unsafe eval/document.write usage is not allowed.');
 
   const scriptPattern = /<script(?![^>]*type=["']application\/ld\+json["'])[^>]*>([\s\S]*?)<\/script>/gi;
-  let match;
-  let scriptCount = 0;
+  let match; let count = 0;
   while ((match = scriptPattern.exec(html))) {
     const code = match[1].trim();
     if (!code) continue;
-    scriptCount += 1;
-    try {
-      new vm.Script(code, { filename: `embedded-game-script-${scriptCount}.js` });
-    } catch (error) {
-      errors.push(`JavaScript syntax error: ${error.message}`);
-    }
+    count += 1;
+    try { new vm.Script(code, { filename: `game-script-${count}.js` }); }
+    catch (error) { errors.push(`JavaScript syntax error: ${error.message}`); }
   }
-  if (!scriptCount) errors.push('No embedded JavaScript found.');
-
+  if (!count) errors.push('No embedded JavaScript found.');
   return errors;
-}
-
-export function injectSeo(html, { title, description, canonicalUrl }) {
-  const safeTitle = escapeHtml(title);
-  const safeDescription = escapeHtml(description);
-  let output = html;
-  if (!/<title>[\s\S]*?<\/title>/i.test(output)) {
-    output = output.replace(/<head[^>]*>/i, match => `${match}\n<title>${safeTitle}</title>`);
-  }
-  if (!/<meta\s+name=["']description["']/i.test(output)) {
-    output = output.replace(/<head[^>]*>/i, match => `${match}\n<meta name="description" content="${safeDescription}">`);
-  }
-  if (canonicalUrl && !/<link\s+rel=["']canonical["']/i.test(output)) {
-    output = output.replace(/<head[^>]*>/i, match => `${match}\n<link rel="canonical" href="${escapeHtml(canonicalUrl)}">`);
-  }
-  return output;
 }
