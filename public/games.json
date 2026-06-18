@@ -1,5 +1,18 @@
 [
   {
+    "title": "Stardust Surge",
+    "slug": "2026-06-18-154404-stardust-surge",
+    "description": "Pilot a nimble Star-Sprite through treacherous cosmic lanes. Dash past swirling nebulae, dodge rogue asteroids, and collect shimmering Stellar Shards to fuel your momentum and outrun the encroaching Dark Matter.",
+    "genre": "Arcade Action",
+    "mode": "dash",
+    "date": "2026-06-18",
+    "createdAt": "2026-06-18T12:44:14.485Z",
+    "url": "games/2026-06-18-154404-stardust-surge/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 90,
+    "tagline": "Drift, Dash, Dominate the Cosmos!"
+  },
+  {
     "title": "Clockwork Echo",
     "slug": "2026-06-18-154137-clockwork-echo",
     "description": "Stabilize a city inside a giant clock, gather time sparks, calm runaway mechanisms, and face the final midnight resonance.",
