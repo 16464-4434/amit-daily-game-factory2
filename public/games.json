@@ -1,5 +1,18 @@
 [
   {
+    "title": "Coral Chorus",
+    "slug": "2026-06-19-135901-coral-chorus",
+    "description": "Dive into a vibrant undersea world as the Lumina Jelly. Emit rhythmic sonic pulses to nurture blooming corals, awaken hidden life, and soothe agitated sea creatures, pushing back against the encroaching murk.",
+    "genre": "Arcade",
+    "mode": "pulse",
+    "date": "2026-06-19",
+    "createdAt": "2026-06-19T10:59:13.945Z",
+    "url": "games/2026-06-19-135901-coral-chorus/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 93,
+    "tagline": "The ocean's rhythm awaits your touch!"
+  },
+  {
     "title": "Lumina Link",
     "slug": "2026-06-18-211750-lumina-link",
     "description": "Guide the Lumina Bloom through enchanting twilight groves. Use your radiant tether to draw in drifting Sun Droplets, awaken slumbering ancient spirits, and gently redirect the mischievous Gloom Wisps before they dim the ",
