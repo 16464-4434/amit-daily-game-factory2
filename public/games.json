@@ -1,5 +1,18 @@
 [
   {
+    "title": "Myco Bloom",
+    "slug": "2026-06-20-124459-myco-bloom",
+    "description": "Guide the nimble Spore Guide through sprawling subterranean caverns. Use your mystic tether to draw in vital nutrients, cultivate blooming fungi, and redirect invasive Shadow Molds before they consume the ancient fungal ",
+    "genre": "Arcade",
+    "mode": "tether",
+    "date": "2026-06-20",
+    "createdAt": "2026-06-20T09:45:12.538Z",
+    "url": "games/2026-06-20-124459-myco-bloom/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 94,
+    "tagline": "Cultivate the caverns, one spore at a time!"
+  },
+  {
     "title": "Cloudburst Comet",
     "slug": "2026-06-19-203211-cloudburst-comet",
     "description": "Guide the nimble Cloud Comet through the ethereal Sky Trails, dashing past swirling updrafts and dodging mischievous Storm Sprites. Collect glistening Dew Drops to fuel your celestial journey and outpace the encroaching ",
