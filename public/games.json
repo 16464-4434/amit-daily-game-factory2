@@ -1,5 +1,18 @@
 [
   {
+    "title": "Windwhisper Swift",
+    "slug": "2026-06-21-130711-windwhisper-swift",
+    "description": "Guide the nimble Windwhisper through ancient, forgotten Sky Temples. Dash past crumbling ruins and swirling dust devils, activating dormant wind conduits to restore the world's breath before the encroaching Stillness tak",
+    "genre": "Arcade",
+    "mode": "dash",
+    "date": "2026-06-21",
+    "createdAt": "2026-06-21T10:07:22.351Z",
+    "url": "games/2026-06-21-130711-windwhisper-swift/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 90,
+    "tagline": "Master the currents, outrun the quiet."
+  },
+  {
     "title": "Terra Resonance",
     "slug": "2026-06-20-200845-terra-resonance",
     "description": "Delve into the living heart of the world as a Resonance Warden. Emit rhythmic seismic pulses to stabilize ancient crystal formations, nurture vital energy conduits, and calm encroaching tectonic shifts before the core sh",
