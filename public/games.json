@@ -1,5 +1,18 @@
 [
   {
+    "title": "Coral Tether",
+    "slug": "2026-06-21-201113-coral-tether",
+    "description": "Guide a luminous reef spirit through a stormy deep-sea garden, pull lost pearls to safety, and calm the ancient tide engine.",
+    "genre": "Action strategy",
+    "mode": "tether",
+    "date": "2026-06-21",
+    "createdAt": "2026-06-21T17:11:26.819Z",
+    "url": "games/2026-06-21-201113-coral-tether/",
+    "generatorModel": "local-fallback",
+    "engineScore": 94,
+    "tagline": "Control the flow, not just the fight."
+  },
+  {
     "title": "Windwhisper Swift",
     "slug": "2026-06-21-130711-windwhisper-swift",
     "description": "Guide the nimble Windwhisper through ancient, forgotten Sky Temples. Dash past crumbling ruins and swirling dust devils, activating dormant wind conduits to restore the world's breath before the encroaching Stillness tak",
