@@ -1,5 +1,18 @@
 [
   {
+    "title": "Clockwork Echo",
+    "slug": "2026-06-22-152820-clockwork-echo",
+    "description": "Stabilize a city inside a giant clock, gather time sparks, calm runaway mechanisms, and face the final midnight resonance.",
+    "genre": "Arcade survival",
+    "mode": "pulse",
+    "date": "2026-06-22",
+    "createdAt": "2026-06-22T12:28:46.333Z",
+    "url": "games/2026-06-22-152820-clockwork-echo/",
+    "generatorModel": "local-fallback",
+    "engineScore": 93,
+    "tagline": "Every second becomes a decision."
+  },
+  {
     "title": "Coral Tether",
     "slug": "2026-06-21-201113-coral-tether",
     "description": "Guide a luminous reef spirit through a stormy deep-sea garden, pull lost pearls to safety, and calm the ancient tide engine.",
