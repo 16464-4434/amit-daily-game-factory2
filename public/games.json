@@ -1,5 +1,18 @@
 [
   {
+    "title": "Glimmer Glide",
+    "slug": "2026-06-22-220021-glimmer-glide",
+    "description": "Dash through a mystical forest as a firefly, collecting starlight to illuminate your path and evade shadow creatures.",
+    "genre": "Action",
+    "mode": "dash",
+    "date": "2026-06-22",
+    "createdAt": "2026-06-22T19:00:39.380Z",
+    "url": "games/2026-06-22-220021-glimmer-glide/",
+    "generatorModel": "gemini-2.5-flash-lite",
+    "engineScore": 89,
+    "tagline": "Light the way, one dash at a time."
+  },
+  {
     "title": "Clockwork Echo",
     "slug": "2026-06-22-152820-clockwork-echo",
     "description": "Stabilize a city inside a giant clock, gather time sparks, calm runaway mechanisms, and face the final midnight resonance.",
