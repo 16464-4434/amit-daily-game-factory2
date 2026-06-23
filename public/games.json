@@ -1,5 +1,20 @@
 [
   {
+    "title": "Star-Switch Express",
+    "slug": "2026-06-23-150749-star-switch-express",
+    "description": "Join Captain Comet on a cosmic train adventure! Switch galactic rails, collect valuable stardust tickets, and skillfully avoid rogue asteroid carts as you deliver precious cargo across the solar system. A fast-paced dash",
+    "genre": "Arcade, Puzzle-Action",
+    "mode": "dash",
+    "family": "Train",
+    "blueprintId": "train-switch",
+    "date": "2026-06-23",
+    "createdAt": "2026-06-23T12:07:57.910Z",
+    "url": "games/2026-06-23-150749-star-switch-express/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 89,
+    "tagline": "All aboard for a universe of fun!"
+  },
+  {
     "title": "Meteor Garden Guard",
     "slug": "2026-06-23-150153-meteor-garden-guard",
     "description": "undefined",
