@@ -32,4 +32,4 @@ for (const token of ['__GAME_CONFIG__', '__TITLE__', '__DESCRIPTION__']) {
   if (!template.includes(token)) throw new Error(`Template is missing token: ${token}`);
 }
 
-console.log('V4 self-check passed. All scripts and exports match.');
+console.log('V5 self-check passed. All scripts and exports match.');

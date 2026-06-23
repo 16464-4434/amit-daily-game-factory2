@@ -1,37 +1,52 @@
-# Amit Game Factory V4
+# Amit Game Factory V5 — Diversity Lock 🎮
 
-גרסה יציבה שמחליפה את כל קבצי המפעל יחד, כדי שלא יהיו ערבובים בין גרסאות ישנות.
+גרסה שמטרתה לפתור את הבעיה של משחקים שחוזרים על עצמם.
 
-## מה היא עושה
+## מה חדש ב־V5
 
-- יוצרת משחק חדש פעמיים ביום.
-- Gemini מציע רק נושא ושמות. מנוע המשחק עצמו מקומי ונבדק מראש.
-- אם Gemini אינו זמין או שהמכסה נגמרה, נוצר משחק מנושא מובנה.
-- מפרסמת קודם ב-GitHub Pages.
-- אם שלב GitHub Pages נכשל בתוך הריצה, מנסה לפרסם ב-Netlify כגיבוי.
-- שולחת את קישור המשחק במייל.
-- אינה משתמשת ב-dotenv, nodemailer או חבילות npm חיצוניות.
+- יש 24 תבניות רעיון שונות, לא רק 3.
+- בכל ריצה המערכת בודקת את המשחקים האחרונים ולא בוחרת Blueprint שחזר לאחרונה.
+- גם אם Gemini לא עובד או נגמרה המכסה, עדיין נוצר משחק חדש מתוך מאגר רעיונות שלא חוזר מהר.
+- GitHub Pages הוא הפרסום הראשי.
+- Netlify נשאר רק גיבוי אם GitHub Pages נכשל בזמן שה־Action כבר רץ.
+- אין dotenv ואין npm install.
+- רץ פעמיים ביום: 06:17 ו־15:43 UTC, שזה בערך 09:17 ו־18:43 בישראל בזמן שעון קיץ.
 
-## הסודות הנדרשים ב-GitHub
+## סודות שצריך להשאיר ב־GitHub
 
-- `GEMINI_API_KEY`
-- `NETLIFY_AUTH_TOKEN`
-- `NETLIFY_SITE_ID`
-- `GMAIL_USER`
-- `GMAIL_APP_PASSWORD`
-- `EMAIL_TO`
+- GEMINI_API_KEY — לא חובה, אבל משפר שמות ורעיונות.
+- GMAIL_USER
+- GMAIL_APP_PASSWORD
+- EMAIL_TO
+- SITE_URL — כתובת GitHub Pages, לדוגמה:
+  https://16464-4434.github.io/amit-daily-game-factory2
+- NETLIFY_AUTH_TOKEN — רק לגיבוי.
+- NETLIFY_SITE_ID — רק לגיבוי.
 
-`SITE_URL` אינו נדרש ב-V4.
+## איך להעלות
 
-## העלאה
+ב־GitHub:
 
-העלה ל-GitHub את כל מה שנמצא בתוך התיקייה `UPLOAD_TO_GITHUB`, כולל `.github`.
-אל תעלה את קובץ ה-ZIP עצמו.
+1. Code → Add file → Upload files
+2. לגרור את כל מה שבתוך UPLOAD_TO_GITHUB
+3. Commit changes
+4. Actions → Amit Game Factory V5 → Run workflow
 
-לאחר ההעלאה הפעל ריצה חדשה:
+לא לעשות Re-run לריצות ישנות.
 
-`Actions → Amit Game Factory V4 → Run workflow`
+## איך לעצור ריצה אוטומטית אבל להשאיר ידני
 
-## הערה על הגיבוי
+בקובץ `.github/workflows/daily-game.yml` למחוק רק את:
 
-Netlify יכול לשמש גיבוי רק אם GitHub Actions התחיל לרוץ ושלב Pages נכשל. אם GitHub Actions עצמו אינו יכול להתחיל בגלל מכסה, הקוד שבתוך הריצה אינו יכול להפעיל שירות אחר.
+```yml
+  schedule:
+    - cron: "17 6 * * *"
+    - cron: "43 15 * * *"
+```
+
+ולהשאיר:
+
+```yml
+on:
+  workflow_dispatch: {}
+```

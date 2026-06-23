@@ -1,9 +1,9 @@
 {
-  "name": "amit-game-factory-v4",
-  "version": "4.0.0",
+  "name": "amit-game-factory-v5",
+  "version": "5.0.0",
   "private": true,
   "type": "module",
-  "description": "Twice-daily browser game factory with GitHub Pages and Netlify fallback.",
+  "description": "Twice-daily diverse browser game factory with GitHub Pages and Netlify fallback.",
   "scripts": {
     "check": "node scripts/self-check.mjs",
     "generate": "node scripts/generate-game.mjs",

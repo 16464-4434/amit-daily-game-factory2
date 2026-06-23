@@ -17,6 +17,6 @@ for (const game of manifest) {
 }
 
 const gallery = await fs.readFile(path.join(PUBLIC_DIR, 'index.html'), 'utf8');
-if (!/<title>/i.test(gallery) || !/Game Factory V3/i.test(gallery)) throw new Error('Gallery page is incomplete.');
+if (!/<title>/i.test(gallery) || !/Game Factory V5/i.test(gallery)) throw new Error('Gallery page is incomplete.');
 if (!await fs.stat(path.join(PUBLIC_DIR, '.nojekyll')).catch(() => null)) throw new Error('Missing public/.nojekyll.');
-console.log(`Validated ${manifest.length} V3 game(s) and the gallery.`);
+console.log(`Validated ${manifest.length} V5 game(s) and the gallery.`);

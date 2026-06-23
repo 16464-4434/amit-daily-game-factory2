@@ -62,11 +62,11 @@ const latest = manifest[0];
 if (!latest) throw new Error('No game found in public/games.json.');
 const gameUrl = `${deployedBase}/${String(latest.url || '').replace(/^\/+/, '')}`;
 const subject = `🎮 משחק חדש: ${latest.title}`;
-const textBody = `המשחק החדש ${latest.title} מוכן.\n\nלמשחק: ${gameUrl}\nלגלריה: ${deployedBase}\n\nAmit's Game Factory V3`;
-const htmlBody = `<div style="font-family:Arial,sans-serif;max-width:650px;margin:auto;padding:30px;background:#0b1020;color:#f5f7ff;border-radius:22px"><div style="font-size:12px;color:#78f4ff;font-weight:800;letter-spacing:1px">AMIT'S GAME FACTORY V3</div><h1 style="font-size:31px;margin:14px 0 8px">${escapeHtml(latest.title)}</h1><p style="color:#bbc5e6;line-height:1.65">${escapeHtml(latest.description || '')}</p><p><a href="${escapeHtml(gameUrl)}" style="display:inline-block;padding:14px 22px;background:#78f4ff;color:#07101a;text-decoration:none;border-radius:12px;font-weight:900">פתח את המשחק</a></p><p style="font-size:13px;color:#8793bd">גלריה: <a style="color:#b9c5ff" href="${escapeHtml(deployedBase)}">${escapeHtml(deployedBase)}</a></p></div>`;
+const textBody = `המשחק החדש ${latest.title} מוכן.\n\nלמשחק: ${gameUrl}\nלגלריה: ${deployedBase}\n\nAmit's Game Factory V5`;
+const htmlBody = `<div style="font-family:Arial,sans-serif;max-width:650px;margin:auto;padding:30px;background:#0b1020;color:#f5f7ff;border-radius:22px"><div style="font-size:12px;color:#78f4ff;font-weight:800;letter-spacing:1px">AMIT'S GAME FACTORY V5</div><h1 style="font-size:31px;margin:14px 0 8px">${escapeHtml(latest.title)}</h1><p style="color:#bbc5e6;line-height:1.65">${escapeHtml(latest.description || '')}</p><p><a href="${escapeHtml(gameUrl)}" style="display:inline-block;padding:14px 22px;background:#78f4ff;color:#07101a;text-decoration:none;border-radius:12px;font-weight:900">פתח את המשחק</a></p><p style="font-size:13px;color:#8793bd">גלריה: <a style="color:#b9c5ff" href="${escapeHtml(deployedBase)}">${escapeHtml(deployedBase)}</a></p></div>`;
 const boundary = `amit-v3-${Date.now().toString(36)}`;
 const message = [
-  `From: ${encodeHeader("Amit's Game Factory V3")} <${gmailUser}>`,
+  `From: ${encodeHeader("Amit's Game Factory V5")} <${gmailUser}>`,
   `To: <${emailTo}>`,
   `Subject: ${encodeHeader(subject)}`,
   'MIME-Version: 1.0',
