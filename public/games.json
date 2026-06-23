@@ -1,5 +1,18 @@
 [
   {
+    "title": "Gnomish Gear Grind",
+    "slug": "2026-06-23-130505-gnomish-gear-grind",
+    "description": "As a clever Gnomish tinkerer, use your magnetic wrench to pull scattered gears and cogs back to your workshop, reassembling broken contraptions while dodging mischievous mechanical critters.",
+    "genre": "Puzzle-Action",
+    "mode": "tether",
+    "date": "2026-06-23",
+    "createdAt": "2026-06-23T10:05:29.180Z",
+    "url": "games/2026-06-23-130505-gnomish-gear-grind/",
+    "generatorModel": "gemini-2.5-flash-lite",
+    "engineScore": 93,
+    "tagline": "Rebuild the workshop, one gear at a time!"
+  },
+  {
     "title": "Glimmer Glide",
     "slug": "2026-06-22-220021-glimmer-glide",
     "description": "Dash through a mystical forest as a firefly, collecting starlight to illuminate your path and evade shadow creatures.",
