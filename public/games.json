@@ -1,5 +1,20 @@
 [
   {
+    "title": "Woodland Melody",
+    "slug": "2026-06-24-125240-woodland-melody",
+    "description": "Guide your playful Forest Sprite to catch shimmering rhythm notes and gracefully dodge disruptive sound waves. Help restore the magical harmony of the enchanted woods, one beat at a time!",
+    "genre": "Rhythm Adventure",
+    "mode": "pulse",
+    "family": "Music",
+    "blueprintId": "music-storm",
+    "date": "2026-06-24",
+    "createdAt": "2026-06-24T09:52:50.837Z",
+    "url": "games/2026-06-24-125240-woodland-melody/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 91,
+    "tagline": "Restore the forest's song, one beat at a time!"
+  },
+  {
     "title": "BubbleBlast Race",
     "slug": "2026-06-23-203025-bubbleblast-race",
     "description": "Dive into a dazzling underwater dash! Control a zippy sea creature through vibrant coral tunnels, collecting glistening Power Bubbles while outmaneuvering mischievous currents and grumpy sea foes.",
