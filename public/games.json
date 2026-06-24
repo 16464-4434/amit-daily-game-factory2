@@ -1,5 +1,20 @@
 [
   {
+    "title": "Liana Leaper Legends",
+    "slug": "2026-06-24-203249-liana-leaper-legends",
+    "description": "Embark on an exhilarating dash through a vibrant, ancient jungle! Play as Pip the agile Leafkin, racing across swinging lianas and towering vines. Gather magical Sun-Kissed Sprouts to reawaken the forest, all while dodgi",
+    "genre": "Jungle Dash Adventure",
+    "mode": "dash",
+    "family": "Jungle",
+    "blueprintId": "jungle-jump",
+    "date": "2026-06-24",
+    "createdAt": "2026-06-24T17:32:59.086Z",
+    "url": "games/2026-06-24-203249-liana-leaper-legends/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 91,
+    "tagline": "Swing, dash, and sprout your way to jungle glory!"
+  },
+  {
     "title": "Woodland Melody",
     "slug": "2026-06-24-125240-woodland-melody",
     "description": "Guide your playful Forest Sprite to catch shimmering rhythm notes and gracefully dodge disruptive sound waves. Help restore the magical harmony of the enchanted woods, one beat at a time!",
