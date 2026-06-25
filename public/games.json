@@ -1,5 +1,17 @@
 [
   {
+    "title": "Laser Maze Keys 23",
+    "slug": "20260625173522-maze-644",
+    "description": "A real maze game in a museum night, built with a different engine from the recent games.",
+    "genre": "Maze",
+    "engineId": "maze",
+    "date": "2026-06-25",
+    "createdAt": "2026-06-25T17:35:22.374Z",
+    "url": "games/20260625173522-maze-644/",
+    "engineScore": 98,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Color Cargo Sort 37",
     "slug": "20260625124503-sorting-413",
     "description": "A real sorting game in a museum night, built with a different engine from the recent games.",
