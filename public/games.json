@@ -1,5 +1,20 @@
 [
   {
+    "title": "Stellar Sanctuary Safari",
+    "slug": "2026-06-25-124623-stellar-sanctuary-safari",
+    "description": "Join Star Scout Kip on an epic space adventure! Guide lost alien critters through dazzling cosmic landscapes back to their rightful homes in the Stellar Sanctuary. Use your special 'Beam' to gently lead them past playful",
+    "genre": "Arcade Adventure",
+    "mode": "tether",
+    "family": "Zoo",
+    "blueprintId": "planet-zoo",
+    "date": "2026-06-25",
+    "createdAt": "2026-06-25T09:46:42.543Z",
+    "url": "games/2026-06-25-124623-stellar-sanctuary-safari/",
+    "generatorModel": "gemini-2.5-flash",
+    "engineScore": 93,
+    "tagline": "Explore the stars, rescue the critters, save the day!"
+  },
+  {
     "title": "Liana Leaper Legends",
     "slug": "2026-06-24-203249-liana-leaper-legends",
     "description": "Embark on an exhilarating dash through a vibrant, ancient jungle! Play as Pip the agile Leafkin, racing across swinging lianas and towering vines. Gather magical Sun-Kissed Sprouts to reawaken the forest, all while dodgi",
