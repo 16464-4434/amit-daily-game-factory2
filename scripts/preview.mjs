@@ -1,19 +1,6 @@
 import http from 'node:http';
-import fs from 'node:fs';
+import fs from 'node:fs/promises';
 import path from 'node:path';
 import { PUBLIC_DIR } from './common.mjs';
-
-const port = Number(process.env.PORT || 3000);
-const mime = { '.html':'text/html; charset=utf-8', '.json':'application/json; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'text/javascript; charset=utf-8', '.xml':'application/xml; charset=utf-8', '.txt':'text/plain; charset=utf-8', '.png':'image/png', '.jpg':'image/jpeg', '.svg':'image/svg+xml' };
-const server = http.createServer((req, res) => {
-  try {
-    const urlPath = decodeURIComponent(new URL(req.url, `http://${req.headers.host}`).pathname);
-    let target = path.join(PUBLIC_DIR, urlPath.replace(/^\/+/, ''));
-    if (!target.startsWith(PUBLIC_DIR)) throw new Error('Invalid path');
-    if (fs.existsSync(target) && fs.statSync(target).isDirectory()) target = path.join(target, 'index.html');
-    if (!fs.existsSync(target)) { res.writeHead(404); res.end('Not found'); return; }
-    res.writeHead(200, { 'content-type': mime[path.extname(target).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-store' });
-    fs.createReadStream(target).pipe(res);
-  } catch (error) { res.writeHead(400); res.end(error.message); }
-});
-server.listen(port, '127.0.0.1', () => console.log(`Preview: http://localhost:${port}`));
+const port=3000; const types={'.html':'text/html','.js':'text/javascript','.json':'application/json','.css':'text/css','.txt':'text/plain'};
+http.createServer(async(req,res)=>{let p=decodeURIComponent(req.url.split('?')[0]); if(p==='/' )p='/index.html'; const file=path.join(PUBLIC_DIR,p); if(!file.startsWith(PUBLIC_DIR)){res.writeHead(403).end();return} try{const st=await fs.stat(file); const f=st.isDirectory()?path.join(file,'index.html'):file; res.writeHead(200,{'Content-Type':types[path.extname(f)]||'application/octet-stream'}); res.end(await fs.readFile(f));}catch{res.writeHead(404).end('Not found')}}).listen(port,()=>console.log(`http://localhost:${port}`));
