@@ -1,5 +1,17 @@
 [
   {
+    "title": "Crystal Brick Blast 45",
+    "slug": "20260626172438-breakout-824",
+    "description": "A real breakout game in a space farm, built with a different engine from the recent games.",
+    "genre": "Breakout",
+    "engineId": "breakout",
+    "date": "2026-06-26",
+    "createdAt": "2026-06-26T17:24:38.154Z",
+    "url": "games/20260626172438-breakout-824/",
+    "engineScore": 89,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Meteor Dodge Arena 7",
     "slug": "20260626095331-dodge-422",
     "description": "A real dodge game in a sky kitchen, built with a different engine from the recent games.",
