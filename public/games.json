@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Base Defender 90",
+    "slug": "20260627090710-defender-637",
+    "description": "A real defense game in a jungle temple, built with a different engine from the recent games.",
+    "genre": "Defense",
+    "engineId": "defender",
+    "date": "2026-06-27",
+    "createdAt": "2026-06-27T09:07:10.146Z",
+    "url": "games/20260627090710-defender-637/",
+    "engineScore": 95,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Crystal Brick Blast 45",
     "slug": "20260626172438-breakout-824",
     "description": "A real breakout game in a space farm, built with a different engine from the recent games.",
