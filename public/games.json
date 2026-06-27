@@ -1,5 +1,17 @@
 [
   {
+    "title": "Treasure Orbit Dash 3",
+    "slug": "20260627164735-collector-608",
+    "description": "A real collector game in a space farm, built with a different engine from the recent games.",
+    "genre": "Collector",
+    "engineId": "collector",
+    "date": "2026-06-27",
+    "createdAt": "2026-06-27T16:47:35.395Z",
+    "url": "games/20260627164735-collector-608/",
+    "engineScore": 95,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Tiny Base Defender 90",
     "slug": "20260627090710-defender-637",
     "description": "A real defense game in a jungle temple, built with a different engine from the recent games.",
