@@ -1,5 +1,17 @@
 [
   {
+    "title": "Galaxy Paddle Duel 34",
+    "slug": "20260628164820-pong-586",
+    "description": "A real pong game in a music storm, built with a different engine from the recent games.",
+    "genre": "Pong",
+    "engineId": "pong",
+    "date": "2026-06-28",
+    "createdAt": "2026-06-28T16:48:20.850Z",
+    "url": "games/20260628164820-pong-586/",
+    "engineScore": 88,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Neon Snake Quest 68",
     "slug": "20260628093418-snake-546",
     "description": "A real snake game in a jungle temple, built with a different engine from the recent games.",
