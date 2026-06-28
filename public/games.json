@@ -1,5 +1,17 @@
 [
   {
+    "title": "Neon Snake Quest 68",
+    "slug": "20260628093418-snake-546",
+    "description": "A real snake game in a jungle temple, built with a different engine from the recent games.",
+    "genre": "Snake",
+    "engineId": "snake",
+    "date": "2026-06-28",
+    "createdAt": "2026-06-28T09:34:18.811Z",
+    "url": "games/20260628093418-snake-546/",
+    "engineScore": 89,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Treasure Orbit Dash 3",
     "slug": "20260627164735-collector-608",
     "description": "A real collector game in a space farm, built with a different engine from the recent games.",
