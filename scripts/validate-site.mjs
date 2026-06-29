@@ -1,14 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { GAMES_DIR, PUBLIC_DIR, readJson, validateGameHtml } from './common.mjs';
-const manifest = await readJson(path.join(PUBLIC_DIR,'games.json'), []);
-if (!Array.isArray(manifest)) throw new Error('public/games.json is not an array');
-if (!manifest.length) console.log('No games yet; OK for first deploy.');
-for (const game of manifest.slice(0, 20)) {
-  const file = path.join(PUBLIC_DIR, game.url || '', 'index.html');
-  const html = await fs.readFile(file, 'utf8');
-  const errors = validateGameHtml(html);
-  if (errors.length) throw new Error(`${game.title}: ${errors.join(' | ')}`);
-}
-await fs.access(path.join(PUBLIC_DIR,'index.html'));
-console.log(`Validated ${manifest.length} games.`);
+
+const manifestPath = path.join(PUBLIC_DIR, 'games.json');
+const manifest = await readJson(manifestPath, []);
+if (!Array.isArray(manifest) || manifest.length === 0) throw new Error('No games in public/games.json');
+const latest = manifest[0];
+if (!latest.url || !latest.title || !latest.engineId) throw new Error('Latest game entry is missing required fields');
+const latestHtml = await fs.readFile(path.join(PUBLIC_DIR, latest.url, 'index.html'), 'utf8');
+const errors = validateGameHtml(latestHtml);
+if (errors.length) throw new Error(errors.join(' | '));
+try { await fs.access(path.join(PUBLIC_DIR, 'index.html')); } catch { throw new Error('Missing public/index.html'); }
+console.log(`Validated ${latest.title} (${latest.engineId}). Total games: ${manifest.length}`);

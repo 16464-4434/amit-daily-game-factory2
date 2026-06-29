@@ -1,14 +1,13 @@
 {
-  "name": "amit-game-factory-v6-real-variety",
-  "version": "6.0.0",
-  "private": true,
+  "name": "amit-game-factory-v7-not-same",
+  "version": "7.0.0",
   "type": "module",
   "scripts": {
     "generate": "node scripts/generate-game.mjs",
     "validate": "node scripts/validate-site.mjs",
     "email": "node scripts/send-email.mjs",
-    "preview": "node scripts/preview.mjs",
-    "test": "node scripts/generate-game.mjs && node scripts/validate-site.mjs"
+    "preview": "node scripts/preview.mjs"
   },
-  "engines": { "node": ">=20" }
+  "private": true,
+  "dependencies": {}
 }

@@ -1,7 +1,3 @@
-# Amit Game Factory V6 — Real Variety
+# Amit Game Factory V7
 
-V6 creates games from different game engines, not just different skins on the same engine.
-
-Engines include: snake, breakout, flappy, maze, runner, target pop, defender, sorting, pong, collector, memory, and dodge.
-
-No npm packages, no dotenv, GitHub Pages first, Netlify fallback only if Pages fails.
+V7 is focused on real variety. It does not reuse one arcade skin. Each run chooses a different full mini-game template and avoids repeating the same engine until the catalog is exhausted.
