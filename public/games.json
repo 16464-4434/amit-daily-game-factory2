@@ -1,5 +1,17 @@
 [
   {
+    "title": "Brick Blaster Arena 98",
+    "slug": "20260629180026-brick-blaster-818",
+    "description": "Breakout game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Breakout",
+    "engineId": "brick-blaster",
+    "date": "2026-06-29",
+    "createdAt": "2026-06-29T18:00:26.805Z",
+    "url": "games/20260629180026-brick-blaster-818/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Fishing Timing Dock 88",
     "slug": "20260629123549-fishing-timing-178",
     "description": "Fishing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
