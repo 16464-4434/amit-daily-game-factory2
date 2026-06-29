@@ -1,5 +1,17 @@
 [
   {
+    "title": "Bubble Pop Mission 24",
+    "slug": "20260629112537-target-725",
+    "description": "A real target pop game in a candy lab, built with a different engine from the recent games.",
+    "genre": "Target Pop",
+    "engineId": "target",
+    "date": "2026-06-29",
+    "createdAt": "2026-06-29T11:25:37.933Z",
+    "url": "games/20260629112537-target-725/",
+    "engineScore": 89,
+    "generatorModel": "v6-real-variety-local"
+  },
+  {
     "title": "Galaxy Paddle Duel 34",
     "slug": "20260628164820-pong-586",
     "description": "A real pong game in a music storm, built with a different engine from the recent games.",
