@@ -1,5 +1,17 @@
 [
   {
+    "title": "Fishing Timing Dock 88",
+    "slug": "20260629123549-fishing-timing-178",
+    "description": "Fishing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Fishing",
+    "engineId": "fishing-timing",
+    "date": "2026-06-29",
+    "createdAt": "2026-06-29T12:35:49.765Z",
+    "url": "games/20260629123549-fishing-timing-178/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Bubble Pop Mission 24",
     "slug": "20260629112537-target-725",
     "description": "A real target pop game in a candy lab, built with a different engine from the recent games.",
