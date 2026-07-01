@@ -1,5 +1,17 @@
 [
   {
+    "title": "Whack The Light Bugs 20",
+    "slug": "20260701101716-whack-lights-470",
+    "description": "Reaction game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Reaction",
+    "engineId": "whack-lights",
+    "date": "2026-07-01",
+    "createdAt": "2026-07-01T10:17:16.110Z",
+    "url": "games/20260701101716-whack-lights-470/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Mini Golf Shot 27",
     "slug": "20260630172952-golf-shot-477",
     "description": "Aim game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
