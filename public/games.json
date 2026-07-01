@@ -1,5 +1,17 @@
 [
   {
+    "title": "Maze Keys Escape 68",
+    "slug": "20260701173259-maze-keys-878",
+    "description": "Maze game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Maze",
+    "engineId": "maze-keys",
+    "date": "2026-07-01",
+    "createdAt": "2026-07-01T17:32:59.442Z",
+    "url": "games/20260701173259-maze-keys-878/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Whack The Light Bugs 20",
     "slug": "20260701101716-whack-lights-470",
     "description": "Reaction game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
