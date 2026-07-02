@@ -1,5 +1,17 @@
 [
   {
+    "title": "Avoid Arena Swarm 54",
+    "slug": "20260702172027-avoid-arena-954",
+    "description": "Survival game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Survival",
+    "engineId": "avoid-arena",
+    "date": "2026-07-02",
+    "createdAt": "2026-07-02T17:20:27.399Z",
+    "url": "games/20260702172027-avoid-arena-954/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Basket Arc Challenge 55",
     "slug": "20260702093526-basket-arc-955",
     "description": "Sports game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
