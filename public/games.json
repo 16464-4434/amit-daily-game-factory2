@@ -1,5 +1,17 @@
 [
   {
+    "title": "Keyboard Rain Rescue 75",
+    "slug": "20260707174427-typing-rain-795",
+    "description": "Typing game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Typing",
+    "engineId": "typing-rain",
+    "date": "2026-07-07",
+    "createdAt": "2026-07-07T17:44:27.235Z",
+    "url": "games/20260707174427-typing-rain-795/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Beat Tap Studio 12",
     "slug": "20260707100222-rhythm-tap-822",
     "description": "Rhythm game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
