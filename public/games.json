@@ -1,5 +1,17 @@
 [
   {
+    "title": "Beat Tap Studio 61",
+    "slug": "20260717082957-rhythm-tap-511",
+    "description": "Rhythm game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Rhythm",
+    "engineId": "rhythm-tap",
+    "date": "2026-07-17",
+    "createdAt": "2026-07-17T08:29:57.568Z",
+    "url": "games/20260717082957-rhythm-tap-511/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Color Brain Switch 79",
     "slug": "20260716165339-color-brain-979",
     "description": "Puzzle game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
