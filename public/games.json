@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Space Defender 60",
+    "slug": "20260725082608-space-shooter-960",
+    "description": "Shooter game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Shooter",
+    "engineId": "space-shooter",
+    "date": "2026-07-25",
+    "createdAt": "2026-07-25T08:26:08.114Z",
+    "url": "games/20260725082608-space-shooter-960/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Simon Orb Memory 95",
     "slug": "20260724171154-simon-orbs-545",
     "description": "Pattern game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
