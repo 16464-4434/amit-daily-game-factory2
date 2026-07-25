@@ -1,5 +1,17 @@
 [
   {
+    "title": "One Button Cloud Flight 76",
+    "slug": "20260725163544-flappy-gates-706",
+    "description": "Flying game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Flying",
+    "engineId": "flappy-gates",
+    "date": "2026-07-25",
+    "createdAt": "2026-07-25T16:35:44.774Z",
+    "url": "games/20260725163544-flappy-gates-706/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Tiny Space Defender 60",
     "slug": "20260725082608-space-shooter-960",
     "description": "Shooter game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
