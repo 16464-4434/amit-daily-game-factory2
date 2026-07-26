@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 95",
+    "slug": "20260726163631-color-brain-815",
+    "description": "Puzzle game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-07-26",
+    "createdAt": "2026-07-26T16:36:31.269Z",
+    "url": "games/20260726163631-color-brain-815/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 63",
     "slug": "20260726084038-platform-coins-333",
     "description": "Platformer game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
