@@ -1,5 +1,17 @@
 [
   {
+    "title": "Beat Tap Studio 21",
+    "slug": "20260727101109-rhythm-tap-651",
+    "description": "Rhythm game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Rhythm",
+    "engineId": "rhythm-tap",
+    "date": "2026-07-27",
+    "createdAt": "2026-07-27T10:11:09.791Z",
+    "url": "games/20260727101109-rhythm-tap-651/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Color Brain Switch 95",
     "slug": "20260726163631-color-brain-815",
     "description": "Puzzle game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
