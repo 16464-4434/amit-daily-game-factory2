@@ -1,5 +1,17 @@
 [
   {
+    "title": "Grid Snake Lab 66",
+    "slug": "20260728090758-snake-board-516",
+    "description": "Snake game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Snake",
+    "engineId": "snake-board",
+    "date": "2026-07-28",
+    "createdAt": "2026-07-28T09:07:58.433Z",
+    "url": "games/20260728090758-snake-board-516/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Keyboard Rain Rescue 95",
     "slug": "20260727172210-typing-rain-455",
     "description": "Typing game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
