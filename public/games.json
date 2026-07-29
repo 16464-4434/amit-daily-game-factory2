@@ -1,5 +1,17 @@
 [
   {
+    "title": "Brick Blaster Arena 66",
+    "slug": "20260729165754-brick-blaster-876",
+    "description": "Breakout game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Breakout",
+    "engineId": "brick-blaster",
+    "date": "2026-07-29",
+    "createdAt": "2026-07-29T16:57:54.734Z",
+    "url": "games/20260729165754-brick-blaster-876/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Fishing Timing Dock 39",
     "slug": "20260729091239-fishing-timing-399",
     "description": "Fishing game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
