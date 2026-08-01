@@ -1,5 +1,17 @@
 [
   {
+    "title": "Basket Arc Challenge 94",
+    "slug": "20260801083517-basket-arc-814",
+    "description": "Sports game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Sports",
+    "engineId": "basket-arc",
+    "date": "2026-08-01",
+    "createdAt": "2026-08-01T08:35:17.354Z",
+    "url": "games/20260801083517-basket-arc-814/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Maze Keys Escape 32",
     "slug": "20260731171104-maze-keys-482",
     "description": "Maze game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
