@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 68",
+    "slug": "20260802163704-tower-stack-428",
+    "description": "Timing game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-08-02",
+    "createdAt": "2026-08-02T16:37:04.249Z",
+    "url": "games/20260802163704-tower-stack-428/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 10",
     "slug": "20260802083808-mining-grid-280",
     "description": "Mining game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
