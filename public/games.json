@@ -1,5 +1,17 @@
 [
   {
+    "title": "Treasure Mine Clicker 10",
+    "slug": "20260802083808-mining-grid-280",
+    "description": "Mining game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Mining",
+    "engineId": "mining-grid",
+    "date": "2026-08-02",
+    "createdAt": "2026-08-02T08:38:08.051Z",
+    "url": "games/20260802083808-mining-grid-280/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Avoid Arena Swarm 44",
     "slug": "20260801163742-avoid-arena-674",
     "description": "Survival game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
