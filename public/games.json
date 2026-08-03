@@ -1,5 +1,17 @@
 [
   {
+    "title": "Simon Orb Memory 50",
+    "slug": "20260803172817-simon-orbs-680",
+    "description": "Pattern game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pattern",
+    "engineId": "simon-orbs",
+    "date": "2026-08-03",
+    "createdAt": "2026-08-03T17:28:17.175Z",
+    "url": "games/20260803172817-simon-orbs-680/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Flip Card Monster Match 44",
     "slug": "20260803100752-memory-cards-764",
     "description": "Memory game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
