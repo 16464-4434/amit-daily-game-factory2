@@ -1,5 +1,17 @@
 [
   {
+    "title": "One Button Cloud Flight 71",
+    "slug": "20260804172154-flappy-gates-971",
+    "description": "Flying game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Flying",
+    "engineId": "flappy-gates",
+    "date": "2026-08-04",
+    "createdAt": "2026-08-04T17:21:54.115Z",
+    "url": "games/20260804172154-flappy-gates-971/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Tiny Space Defender 74",
     "slug": "20260804091156-space-shooter-884",
     "description": "Shooter game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
