@@ -1,5 +1,17 @@
 [
   {
+    "title": "Coin Cave Platformer 39",
+    "slug": "20260805090846-platform-coins-939",
+    "description": "Platformer game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Platformer",
+    "engineId": "platform-coins",
+    "date": "2026-08-05",
+    "createdAt": "2026-08-05T09:08:46.096Z",
+    "url": "games/20260805090846-platform-coins-939/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "One Button Cloud Flight 71",
     "slug": "20260804172154-flappy-gates-971",
     "description": "Flying game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
