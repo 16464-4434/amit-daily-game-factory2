@@ -1,5 +1,17 @@
 [
   {
+    "title": "Beat Tap Studio 76",
+    "slug": "20260806090903-rhythm-tap-616",
+    "description": "Rhythm game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Rhythm",
+    "engineId": "rhythm-tap",
+    "date": "2026-08-06",
+    "createdAt": "2026-08-06T09:09:03.915Z",
+    "url": "games/20260806090903-rhythm-tap-616/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Color Brain Switch 82",
     "slug": "20260805171046-color-brain-352",
     "description": "Puzzle game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
