@@ -1,5 +1,17 @@
 [
   {
+    "title": "Grid Snake Lab 20",
+    "slug": "20260807163456-snake-board-560",
+    "description": "Snake game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Snake",
+    "engineId": "snake-board",
+    "date": "2026-08-07",
+    "createdAt": "2026-08-07T16:34:56.290Z",
+    "url": "games/20260807163456-snake-board-560/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Keyboard Rain Rescue 46",
     "slug": "20260807074442-typing-rain-226",
     "description": "Typing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
