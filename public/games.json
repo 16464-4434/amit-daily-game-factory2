@@ -1,5 +1,17 @@
 [
   {
+    "title": "Keyboard Rain Rescue 46",
+    "slug": "20260807074442-typing-rain-226",
+    "description": "Typing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Typing",
+    "engineId": "typing-rain",
+    "date": "2026-08-07",
+    "createdAt": "2026-08-07T07:44:42.774Z",
+    "url": "games/20260807074442-typing-rain-226/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Beat Tap Studio 76",
     "slug": "20260806090903-rhythm-tap-616",
     "description": "Rhythm game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
