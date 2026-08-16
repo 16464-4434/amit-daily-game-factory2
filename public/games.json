@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 21",
+    "slug": "20260816070202-color-brain-831",
+    "description": "Puzzle game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-08-16",
+    "createdAt": "2026-08-16T07:02:02.571Z",
+    "url": "games/20260816070202-color-brain-831/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 36",
     "slug": "20260815155656-platform-coins-756",
     "description": "Platformer game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
