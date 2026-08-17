@@ -1,5 +1,17 @@
 [
   {
+    "title": "Keyboard Rain Rescue 32",
+    "slug": "20260817071821-typing-rain-212",
+    "description": "Typing game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Typing",
+    "engineId": "typing-rain",
+    "date": "2026-08-17",
+    "createdAt": "2026-08-17T07:18:21.358Z",
+    "url": "games/20260817071821-typing-rain-212/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Beat Tap Studio 41",
     "slug": "20260816155742-rhythm-tap-671",
     "description": "Rhythm game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
