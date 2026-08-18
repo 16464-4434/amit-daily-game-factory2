@@ -1,5 +1,17 @@
 [
   {
+    "title": "Paddle Duel Galaxy 63",
+    "slug": "20260818070713-paddle-duel-423",
+    "description": "Pong game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pong",
+    "engineId": "paddle-duel",
+    "date": "2026-08-18",
+    "createdAt": "2026-08-18T07:07:13.115Z",
+    "url": "games/20260818070713-paddle-duel-423/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Grid Snake Lab 20",
     "slug": "20260817155952-snake-board-110",
     "description": "Snake game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
