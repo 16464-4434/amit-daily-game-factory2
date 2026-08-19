@@ -1,5 +1,17 @@
 [
   {
+    "title": "Neon Lane Racer 24",
+    "slug": "20260819160305-lane-racer-564",
+    "description": "Racing game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Racing",
+    "engineId": "lane-racer",
+    "date": "2026-08-19",
+    "createdAt": "2026-08-19T16:03:05.542Z",
+    "url": "games/20260819160305-lane-racer-564/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Brick Blaster Arena 89",
     "slug": "20260819070746-brick-blaster-719",
     "description": "Breakout game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
