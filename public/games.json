@@ -1,5 +1,17 @@
 [
   {
+    "title": "Mini Golf Shot 45",
+    "slug": "20260820070841-golf-shot-315",
+    "description": "Aim game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Aim",
+    "engineId": "golf-shot",
+    "date": "2026-08-20",
+    "createdAt": "2026-08-20T07:08:41.723Z",
+    "url": "games/20260820070841-golf-shot-315/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Neon Lane Racer 24",
     "slug": "20260819160305-lane-racer-564",
     "description": "Racing game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
