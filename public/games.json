@@ -1,5 +1,17 @@
 [
   {
+    "title": "Whack The Light Bugs 99",
+    "slug": "20260820160542-whack-lights-279",
+    "description": "Reaction game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Reaction",
+    "engineId": "whack-lights",
+    "date": "2026-08-20",
+    "createdAt": "2026-08-20T16:05:42.870Z",
+    "url": "games/20260820160542-whack-lights-279/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Mini Golf Shot 45",
     "slug": "20260820070841-golf-shot-315",
     "description": "Aim game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
