@@ -1,5 +1,17 @@
 [
   {
+    "title": "Basket Arc Challenge 51",
+    "slug": "20260821160410-basket-arc-681",
+    "description": "Sports game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Sports",
+    "engineId": "basket-arc",
+    "date": "2026-08-21",
+    "createdAt": "2026-08-21T16:04:10.721Z",
+    "url": "games/20260821160410-basket-arc-681/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Maze Keys Escape 55",
     "slug": "20260821070955-maze-keys-145",
     "description": "Maze game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
