@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 64",
+    "slug": "20260823070428-tower-stack-874",
+    "description": "Timing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-08-23",
+    "createdAt": "2026-08-23T07:04:28.571Z",
+    "url": "games/20260823070428-tower-stack-874/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 61",
     "slug": "20260822155734-mining-grid-871",
     "description": "Mining game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
