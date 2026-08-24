@@ -1,5 +1,17 @@
 [
   {
+    "title": "Simon Orb Memory 72",
+    "slug": "20260824073053-simon-orbs-882",
+    "description": "Pattern game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pattern",
+    "engineId": "simon-orbs",
+    "date": "2026-08-24",
+    "createdAt": "2026-08-24T07:30:53.814Z",
+    "url": "games/20260824073053-simon-orbs-882/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Flip Card Monster Match 99",
     "slug": "20260823155826-memory-cards-639",
     "description": "Memory game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
