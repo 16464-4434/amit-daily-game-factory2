@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 94",
+    "slug": "20260826071052-color-brain-904",
+    "description": "Puzzle game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-08-26",
+    "createdAt": "2026-08-26T07:10:52.058Z",
+    "url": "games/20260826071052-color-brain-904/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 23",
     "slug": "20260825161817-platform-coins-563",
     "description": "Platformer game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
