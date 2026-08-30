@@ -1,5 +1,17 @@
 [
   {
+    "title": "Mini Golf Shot 56",
+    "slug": "20260830115900-golf-shot-866",
+    "description": "Aim game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Aim",
+    "engineId": "golf-shot",
+    "date": "2026-08-30",
+    "createdAt": "2026-08-30T11:59:00.548Z",
+    "url": "games/20260830115900-golf-shot-866/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Neon Lane Racer 80",
     "slug": "20260829185259-lane-racer-800",
     "description": "Racing game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
