@@ -1,5 +1,17 @@
 [
   {
+    "title": "Maze Keys Escape 88",
+    "slug": "20260831135948-maze-keys-268",
+    "description": "Maze game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Maze",
+    "engineId": "maze-keys",
+    "date": "2026-08-31",
+    "createdAt": "2026-08-31T13:59:48.030Z",
+    "url": "games/20260831135948-maze-keys-268/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Whack The Light Bugs 35",
     "slug": "20260830184837-whack-lights-485",
     "description": "Reaction game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
