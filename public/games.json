@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 23",
+    "slug": "20260902112459-tower-stack-383",
+    "description": "Timing game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-09-02",
+    "createdAt": "2026-09-02T11:24:59.358Z",
+    "url": "games/20260902112459-tower-stack-383/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 31",
     "slug": "20260901185100-mining-grid-571",
     "description": "Mining game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
