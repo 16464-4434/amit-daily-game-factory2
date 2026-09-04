@@ -1,5 +1,17 @@
 [
   {
+    "title": "Coin Cave Platformer 95",
+    "slug": "20260904183336-platform-coins-995",
+    "description": "Platformer game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Platformer",
+    "engineId": "platform-coins",
+    "date": "2026-09-04",
+    "createdAt": "2026-09-04T18:33:36.786Z",
+    "url": "games/20260904183336-platform-coins-995/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "One Button Cloud Flight 50",
     "slug": "20260904112454-flappy-gates-950",
     "description": "Flying game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
