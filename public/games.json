@@ -1,5 +1,17 @@
 [
   {
+    "title": "Fishing Timing Dock 20",
+    "slug": "20260907192312-fishing-timing-650",
+    "description": "Fishing game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Fishing",
+    "engineId": "fishing-timing",
+    "date": "2026-09-07",
+    "createdAt": "2026-09-07T19:23:12.305Z",
+    "url": "games/20260907192312-fishing-timing-650/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Paddle Duel Galaxy 17",
     "slug": "20260907124154-paddle-duel-917",
     "description": "Pong game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
