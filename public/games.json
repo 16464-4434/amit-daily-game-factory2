@@ -1,5 +1,17 @@
 [
   {
+    "title": "Neon Lane Racer 26",
+    "slug": "20260908185828-lane-racer-566",
+    "description": "Racing game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Racing",
+    "engineId": "lane-racer",
+    "date": "2026-09-08",
+    "createdAt": "2026-09-08T18:58:28.840Z",
+    "url": "games/20260908185828-lane-racer-566/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Brick Blaster Arena 88",
     "slug": "20260908112509-brick-blaster-628",
     "description": "Breakout game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
