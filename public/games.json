@@ -1,5 +1,17 @@
 [
   {
+    "title": "Brick Blaster Arena 88",
+    "slug": "20260908112509-brick-blaster-628",
+    "description": "Breakout game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Breakout",
+    "engineId": "brick-blaster",
+    "date": "2026-09-08",
+    "createdAt": "2026-09-08T11:25:09.747Z",
+    "url": "games/20260908112509-brick-blaster-628/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Fishing Timing Dock 20",
     "slug": "20260907192312-fishing-timing-650",
     "description": "Fishing game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
