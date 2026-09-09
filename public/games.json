@@ -1,5 +1,17 @@
 [
   {
+    "title": "Mini Golf Shot 10",
+    "slug": "20260909113028-golf-shot-820",
+    "description": "Aim game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Aim",
+    "engineId": "golf-shot",
+    "date": "2026-09-09",
+    "createdAt": "2026-09-09T11:30:28.306Z",
+    "url": "games/20260909113028-golf-shot-820/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Neon Lane Racer 26",
     "slug": "20260908185828-lane-racer-566",
     "description": "Racing game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
