@@ -1,5 +1,17 @@
 [
   {
+    "title": "Whack The Light Bugs 29",
+    "slug": "20260909185105-whack-lights-119",
+    "description": "Reaction game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Reaction",
+    "engineId": "whack-lights",
+    "date": "2026-09-09",
+    "createdAt": "2026-09-09T18:51:05.003Z",
+    "url": "games/20260909185105-whack-lights-119/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Mini Golf Shot 10",
     "slug": "20260909113028-golf-shot-820",
     "description": "Aim game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
