@@ -1,5 +1,17 @@
 [
   {
+    "title": "Avoid Arena Swarm 74",
+    "slug": "20260911112855-avoid-arena-344",
+    "description": "Survival game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Survival",
+    "engineId": "avoid-arena",
+    "date": "2026-09-11",
+    "createdAt": "2026-09-11T11:28:55.359Z",
+    "url": "games/20260911112855-avoid-arena-344/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Basket Arc Challenge 15",
     "slug": "20260910184059-basket-arc-915",
     "description": "Sports game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
