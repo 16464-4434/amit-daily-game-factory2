@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 98",
+    "slug": "20260912105332-tower-stack-278",
+    "description": "Timing game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-09-12",
+    "createdAt": "2026-09-12T10:53:32.995Z",
+    "url": "games/20260912105332-tower-stack-278/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 98",
     "slug": "20260911184440-mining-grid-458",
     "description": "Mining game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
