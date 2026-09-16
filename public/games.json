@@ -1,5 +1,17 @@
 [
   {
+    "title": "Grid Snake Lab 38",
+    "slug": "20260916190553-snake-board-938",
+    "description": "Snake game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Snake",
+    "engineId": "snake-board",
+    "date": "2026-09-16",
+    "createdAt": "2026-09-16T19:05:53.421Z",
+    "url": "games/20260916190553-snake-board-938/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Keyboard Rain Rescue 21",
     "slug": "20260916114350-typing-rain-741",
     "description": "Typing game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
