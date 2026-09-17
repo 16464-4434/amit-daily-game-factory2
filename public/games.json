@@ -1,5 +1,17 @@
 [
   {
+    "title": "Fishing Timing Dock 66",
+    "slug": "20260917191727-fishing-timing-606",
+    "description": "Fishing game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Fishing",
+    "engineId": "fishing-timing",
+    "date": "2026-09-17",
+    "createdAt": "2026-09-17T19:17:27.618Z",
+    "url": "games/20260917191727-fishing-timing-606/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Paddle Duel Galaxy 81",
     "slug": "20260917114826-paddle-duel-801",
     "description": "Pong game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
