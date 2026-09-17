@@ -1,5 +1,17 @@
 [
   {
+    "title": "Paddle Duel Galaxy 81",
+    "slug": "20260917114826-paddle-duel-801",
+    "description": "Pong game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pong",
+    "engineId": "paddle-duel",
+    "date": "2026-09-17",
+    "createdAt": "2026-09-17T11:48:26.517Z",
+    "url": "games/20260917114826-paddle-duel-801/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Grid Snake Lab 38",
     "slug": "20260916190553-snake-board-938",
     "description": "Snake game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
