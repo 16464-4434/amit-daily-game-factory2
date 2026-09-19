@@ -1,5 +1,17 @@
 [
   {
+    "title": "Whack The Light Bugs 96",
+    "slug": "20260919181239-whack-lights-456",
+    "description": "Reaction game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Reaction",
+    "engineId": "whack-lights",
+    "date": "2026-09-19",
+    "createdAt": "2026-09-19T18:12:39.009Z",
+    "url": "games/20260919181239-whack-lights-456/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Mini Golf Shot 13",
     "slug": "20260919110650-golf-shot-553",
     "description": "Aim game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
