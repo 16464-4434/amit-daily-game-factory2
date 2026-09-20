@@ -1,5 +1,17 @@
 [
   {
+    "title": "Maze Keys Escape 57",
+    "slug": "20260920113135-maze-keys-777",
+    "description": "Maze game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Maze",
+    "engineId": "maze-keys",
+    "date": "2026-09-20",
+    "createdAt": "2026-09-20T11:31:35.884Z",
+    "url": "games/20260920113135-maze-keys-777/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Whack The Light Bugs 96",
     "slug": "20260919181239-whack-lights-456",
     "description": "Reaction game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
