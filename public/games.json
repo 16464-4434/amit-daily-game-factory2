@@ -1,5 +1,17 @@
 [
   {
+    "title": "Avoid Arena Swarm 12",
+    "slug": "20260921125627-avoid-arena-912",
+    "description": "Survival game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Survival",
+    "engineId": "avoid-arena",
+    "date": "2026-09-21",
+    "createdAt": "2026-09-21T12:56:27.190Z",
+    "url": "games/20260921125627-avoid-arena-912/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Basket Arc Challenge 89",
     "slug": "20260920181839-basket-arc-449",
     "description": "Sports game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
