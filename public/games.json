@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 55",
+    "slug": "20260922114606-tower-stack-685",
+    "description": "Timing game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-09-22",
+    "createdAt": "2026-09-22T11:46:06.412Z",
+    "url": "games/20260922114606-tower-stack-685/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 44",
     "slug": "20260921200734-mining-grid-134",
     "description": "Mining game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
