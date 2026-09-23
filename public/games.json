@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Space Defender 76",
+    "slug": "20260923191413-space-shooter-706",
+    "description": "Shooter game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Shooter",
+    "engineId": "space-shooter",
+    "date": "2026-09-23",
+    "createdAt": "2026-09-23T19:14:13.015Z",
+    "url": "games/20260923191413-space-shooter-706/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Simon Orb Memory 72",
     "slug": "20260923114530-simon-orbs-162",
     "description": "Pattern game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
