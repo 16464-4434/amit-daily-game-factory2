@@ -1,5 +1,17 @@
 [
   {
+    "title": "Coin Cave Platformer 76",
+    "slug": "20260924193004-platform-coins-976",
+    "description": "Platformer game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Platformer",
+    "engineId": "platform-coins",
+    "date": "2026-09-24",
+    "createdAt": "2026-09-24T19:30:04.627Z",
+    "url": "games/20260924193004-platform-coins-976/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "One Button Cloud Flight 29",
     "slug": "20260924115403-flappy-gates-209",
     "description": "Flying game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
