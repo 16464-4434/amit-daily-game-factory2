@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 30",
+    "slug": "20260925115644-color-brain-210",
+    "description": "Puzzle game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-09-25",
+    "createdAt": "2026-09-25T11:56:44.283Z",
+    "url": "games/20260925115644-color-brain-210/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 76",
     "slug": "20260924193004-platform-coins-976",
     "description": "Platformer game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
