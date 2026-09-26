@@ -1,5 +1,17 @@
 [
   {
+    "title": "Grid Snake Lab 17",
+    "slug": "20260926184330-snake-board-737",
+    "description": "Snake game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Snake",
+    "engineId": "snake-board",
+    "date": "2026-09-26",
+    "createdAt": "2026-09-26T18:43:30.344Z",
+    "url": "games/20260926184330-snake-board-737/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Keyboard Rain Rescue 12",
     "slug": "20260926113054-typing-rain-822",
     "description": "Typing game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
