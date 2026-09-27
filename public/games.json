@@ -1,5 +1,17 @@
 [
   {
+    "title": "Fishing Timing Dock 22",
+    "slug": "20260927191726-fishing-timing-832",
+    "description": "Fishing game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Fishing",
+    "engineId": "fishing-timing",
+    "date": "2026-09-27",
+    "createdAt": "2026-09-27T19:17:26.505Z",
+    "url": "games/20260927191726-fishing-timing-832/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Paddle Duel Galaxy 36",
     "slug": "20260927120902-paddle-duel-756",
     "description": "Pong game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
