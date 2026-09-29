@@ -1,5 +1,17 @@
 [
   {
+    "title": "Mini Golf Shot 45",
+    "slug": "20260929130017-golf-shot-405",
+    "description": "Aim game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Aim",
+    "engineId": "golf-shot",
+    "date": "2026-09-29",
+    "createdAt": "2026-09-29T13:00:17.089Z",
+    "url": "games/20260929130017-golf-shot-405/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Neon Lane Racer 31",
     "slug": "20260928212301-lane-racer-841",
     "description": "Racing game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
