@@ -1,5 +1,17 @@
 [
   {
+    "title": "Maze Keys Escape 39",
+    "slug": "20260930124233-maze-keys-399",
+    "description": "Maze game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Maze",
+    "engineId": "maze-keys",
+    "date": "2026-09-30",
+    "createdAt": "2026-09-30T12:42:33.495Z",
+    "url": "games/20260930124233-maze-keys-399/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Whack The Light Bugs 96",
     "slug": "20260929201424-whack-lights-186",
     "description": "Reaction game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
