@@ -1,5 +1,17 @@
 [
   {
+    "title": "Avoid Arena Swarm 73",
+    "slug": "20261001132628-avoid-arena-703",
+    "description": "Survival game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Survival",
+    "engineId": "avoid-arena",
+    "date": "2026-10-01",
+    "createdAt": "2026-10-01T13:26:28.113Z",
+    "url": "games/20261001132628-avoid-arena-703/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Basket Arc Challenge 58",
     "slug": "20260930201850-basket-arc-418",
     "description": "Sports game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
