@@ -1,5 +1,17 @@
 [
   {
+    "title": "Treasure Mine Clicker 44",
+    "slug": "20261001203155-mining-grid-764",
+    "description": "Mining game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Mining",
+    "engineId": "mining-grid",
+    "date": "2026-10-01",
+    "createdAt": "2026-10-01T20:31:55.553Z",
+    "url": "games/20261001203155-mining-grid-764/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Avoid Arena Swarm 73",
     "slug": "20261001132628-avoid-arena-703",
     "description": "Survival game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
