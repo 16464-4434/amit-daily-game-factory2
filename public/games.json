@@ -1,5 +1,17 @@
 [
   {
+    "title": "Coin Cave Platformer 52",
+    "slug": "20261004184803-platform-coins-682",
+    "description": "Platformer game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Platformer",
+    "engineId": "platform-coins",
+    "date": "2026-10-04",
+    "createdAt": "2026-10-04T18:48:03.634Z",
+    "url": "games/20261004184803-platform-coins-682/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "One Button Cloud Flight 10",
     "slug": "20261004122829-flappy-gates-190",
     "description": "Flying game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
