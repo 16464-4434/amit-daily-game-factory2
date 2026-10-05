@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 99",
+    "slug": "20261005145045-color-brain-909",
+    "description": "Puzzle game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-10-05",
+    "createdAt": "2026-10-05T14:50:45.652Z",
+    "url": "games/20261005145045-color-brain-909/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 52",
     "slug": "20261004184803-platform-coins-682",
     "description": "Platformer game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
