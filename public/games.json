@@ -1,5 +1,17 @@
 [
   {
+    "title": "Beat Tap Studio 77",
+    "slug": "20261005221146-rhythm-tap-617",
+    "description": "Rhythm game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Rhythm",
+    "engineId": "rhythm-tap",
+    "date": "2026-10-05",
+    "createdAt": "2026-10-05T22:11:46.077Z",
+    "url": "games/20261005221146-rhythm-tap-617/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Color Brain Switch 99",
     "slug": "20261005145045-color-brain-909",
     "description": "Puzzle game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
