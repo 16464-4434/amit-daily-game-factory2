@@ -1,5 +1,17 @@
 [
   {
+    "title": "Keyboard Rain Rescue 60",
+    "slug": "20261006132339-typing-rain-960",
+    "description": "Typing game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Typing",
+    "engineId": "typing-rain",
+    "date": "2026-10-06",
+    "createdAt": "2026-10-06T13:23:39.039Z",
+    "url": "games/20261006132339-typing-rain-960/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Beat Tap Studio 77",
     "slug": "20261005221146-rhythm-tap-617",
     "description": "Rhythm game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
