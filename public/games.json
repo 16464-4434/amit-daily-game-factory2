@@ -1,5 +1,17 @@
 [
   {
+    "title": "Neon Lane Racer 57",
+    "slug": "20261008205009-lane-racer-867",
+    "description": "Racing game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Racing",
+    "engineId": "lane-racer",
+    "date": "2026-10-08",
+    "createdAt": "2026-10-08T20:50:09.230Z",
+    "url": "games/20261008205009-lane-racer-867/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Brick Blaster Arena 92",
     "slug": "20261008133804-brick-blaster-812",
     "description": "Breakout game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
