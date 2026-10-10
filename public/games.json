@@ -1,5 +1,17 @@
 [
   {
+    "title": "Maze Keys Escape 73",
+    "slug": "20261010123929-maze-keys-523",
+    "description": "Maze game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Maze",
+    "engineId": "maze-keys",
+    "date": "2026-10-10",
+    "createdAt": "2026-10-10T12:39:29.585Z",
+    "url": "games/20261010123929-maze-keys-523/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Whack The Light Bugs 96",
     "slug": "20261009202002-whack-lights-726",
     "description": "Reaction game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
