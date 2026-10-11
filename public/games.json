@@ -1,5 +1,17 @@
 [
   {
+    "title": "Treasure Mine Clicker 51",
+    "slug": "20261011194346-mining-grid-681",
+    "description": "Mining game in laser aquarium. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Mining",
+    "engineId": "mining-grid",
+    "date": "2026-10-11",
+    "createdAt": "2026-10-11T19:43:46.686Z",
+    "url": "games/20261011194346-mining-grid-681/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Avoid Arena Swarm 19",
     "slug": "20261011125925-avoid-arena-649",
     "description": "Survival game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
