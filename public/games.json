@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Space Defender 44",
+    "slug": "20261013204919-space-shooter-584",
+    "description": "Shooter game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Shooter",
+    "engineId": "space-shooter",
+    "date": "2026-10-13",
+    "createdAt": "2026-10-13T20:49:19.113Z",
+    "url": "games/20261013204919-space-shooter-584/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Simon Orb Memory 69",
     "slug": "20261013141906-simon-orbs-339",
     "description": "Pattern game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
