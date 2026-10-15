@@ -1,5 +1,17 @@
 [
   {
+    "title": "Beat Tap Studio 16",
+    "slug": "20261015192352-rhythm-tap-466",
+    "description": "Rhythm game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Rhythm",
+    "engineId": "rhythm-tap",
+    "date": "2026-10-15",
+    "createdAt": "2026-10-15T19:23:52.351Z",
+    "url": "games/20261015192352-rhythm-tap-466/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Color Brain Switch 98",
     "slug": "20261015113756-color-brain-458",
     "description": "Puzzle game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
