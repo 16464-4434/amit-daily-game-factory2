@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 98",
+    "slug": "20261015113756-color-brain-458",
+    "description": "Puzzle game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-10-15",
+    "createdAt": "2026-10-15T11:37:56.822Z",
+    "url": "games/20261015113756-color-brain-458/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 79",
     "slug": "20261014194206-platform-coins-709",
     "description": "Platformer game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
