@@ -1,5 +1,17 @@
 [
   {
+    "title": "Basket Arc Challenge 66",
+    "slug": "20261020193643-basket-arc-516",
+    "description": "Sports game in haunted arcade. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Sports",
+    "engineId": "basket-arc",
+    "date": "2026-10-20",
+    "createdAt": "2026-10-20T19:36:43.810Z",
+    "url": "games/20261020193643-basket-arc-516/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Maze Keys Escape 16",
     "slug": "20261020114626-maze-keys-376",
     "description": "Maze game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
