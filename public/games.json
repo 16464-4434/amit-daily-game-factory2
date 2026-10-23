@@ -1,5 +1,17 @@
 [
   {
+    "title": "Simon Orb Memory 44",
+    "slug": "20261023114612-simon-orbs-674",
+    "description": "Pattern game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pattern",
+    "engineId": "simon-orbs",
+    "date": "2026-10-23",
+    "createdAt": "2026-10-23T11:46:12.128Z",
+    "url": "games/20261023114612-simon-orbs-674/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Flip Card Monster Match 32",
     "slug": "20261022193132-memory-cards-302",
     "description": "Memory game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
