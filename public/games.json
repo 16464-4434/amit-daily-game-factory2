@@ -1,5 +1,17 @@
 [
   {
+    "title": "One Button Cloud Flight 21",
+    "slug": "20261024111055-flappy-gates-111",
+    "description": "Flying game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Flying",
+    "engineId": "flappy-gates",
+    "date": "2026-10-24",
+    "createdAt": "2026-10-24T11:10:55.383Z",
+    "url": "games/20261024111055-flappy-gates-111/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Tiny Space Defender 21",
     "slug": "20261023193251-space-shooter-651",
     "description": "Shooter game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
