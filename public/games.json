@@ -1,5 +1,17 @@
 [
   {
+    "title": "Paddle Duel Galaxy 11",
+    "slug": "20261027122056-paddle-duel-191",
+    "description": "Pong game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pong",
+    "engineId": "paddle-duel",
+    "date": "2026-10-27",
+    "createdAt": "2026-10-27T12:20:56.056Z",
+    "url": "games/20261027122056-paddle-duel-191/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Grid Snake Lab 32",
     "slug": "20261026204511-snake-board-482",
     "description": "Snake game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
