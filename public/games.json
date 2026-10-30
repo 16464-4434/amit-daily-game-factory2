@@ -1,5 +1,17 @@
 [
   {
+    "title": "Basket Arc Challenge 23",
+    "slug": "20261030200828-basket-arc-743",
+    "description": "Sports game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Sports",
+    "engineId": "basket-arc",
+    "date": "2026-10-30",
+    "createdAt": "2026-10-30T20:08:28.049Z",
+    "url": "games/20261030200828-basket-arc-743/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Maze Keys Escape 24",
     "slug": "20261030130429-maze-keys-294",
     "description": "Maze game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
