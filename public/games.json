@@ -1,5 +1,17 @@
 [
   {
+    "title": "Flip Card Monster Match 38",
+    "slug": "20261101195354-memory-cards-668",
+    "description": "Memory game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Memory",
+    "engineId": "memory-cards",
+    "date": "2026-11-01",
+    "createdAt": "2026-11-01T19:53:54.392Z",
+    "url": "games/20261101195354-memory-cards-668/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Stack Tower Builder 61",
     "slug": "20261101133251-tower-stack-421",
     "description": "Timing game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
