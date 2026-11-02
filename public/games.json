@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Space Defender 15",
+    "slug": "20261102231324-space-shooter-555",
+    "description": "Shooter game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Shooter",
+    "engineId": "space-shooter",
+    "date": "2026-11-02",
+    "createdAt": "2026-11-02T23:13:24.835Z",
+    "url": "games/20261102231324-space-shooter-555/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Simon Orb Memory 15",
     "slug": "20261102160812-simon-orbs-195",
     "description": "Pattern game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
