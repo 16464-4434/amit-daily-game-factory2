@@ -1,5 +1,17 @@
 [
   {
+    "title": "Paddle Duel Galaxy 53",
+    "slug": "20261106142236-paddle-duel-233",
+    "description": "Pong game in robot carnival. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Pong",
+    "engineId": "paddle-duel",
+    "date": "2026-11-06",
+    "createdAt": "2026-11-06T14:22:36.668Z",
+    "url": "games/20261106142236-paddle-duel-233/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Grid Snake Lab 55",
     "slug": "20261105213419-snake-board-415",
     "description": "Snake game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
