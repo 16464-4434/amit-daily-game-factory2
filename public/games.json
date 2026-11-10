@@ -1,5 +1,17 @@
 [
   {
+    "title": "Avoid Arena Swarm 71",
+    "slug": "20261110145848-avoid-arena-791",
+    "description": "Survival game in cloud factory. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Survival",
+    "engineId": "avoid-arena",
+    "date": "2026-11-10",
+    "createdAt": "2026-11-10T14:58:48.648Z",
+    "url": "games/20261110145848-avoid-arena-791/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Basket Arc Challenge 57",
     "slug": "20261109235113-basket-arc-867",
     "description": "Sports game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
