@@ -1,5 +1,17 @@
 [
   {
+    "title": "Stack Tower Builder 64",
+    "slug": "20261111142950-tower-stack-964",
+    "description": "Timing game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Timing",
+    "engineId": "tower-stack",
+    "date": "2026-11-11",
+    "createdAt": "2026-11-11T14:29:50.969Z",
+    "url": "games/20261111142950-tower-stack-964/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Treasure Mine Clicker 14",
     "slug": "20261110212548-mining-grid-194",
     "description": "Mining game in crystal cave. V7 uses a separate game template, not the same engine with a new skin.",
