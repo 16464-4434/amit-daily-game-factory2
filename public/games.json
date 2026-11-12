@@ -1,5 +1,17 @@
 [
   {
+    "title": "Tiny Space Defender 27",
+    "slug": "20261112215529-space-shooter-747",
+    "description": "Shooter game in space bakery. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Shooter",
+    "engineId": "space-shooter",
+    "date": "2026-11-12",
+    "createdAt": "2026-11-12T21:55:29.117Z",
+    "url": "games/20261112215529-space-shooter-747/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Simon Orb Memory 34",
     "slug": "20261112152231-simon-orbs-124",
     "description": "Pattern game in ice cream planet. V7 uses a separate game template, not the same engine with a new skin.",
