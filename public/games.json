@@ -1,5 +1,17 @@
 [
   {
+    "title": "Neon Lane Racer 70",
+    "slug": "20261117230944-lane-racer-250",
+    "description": "Racing game in candy volcano. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Racing",
+    "engineId": "lane-racer",
+    "date": "2026-11-17",
+    "createdAt": "2026-11-17T23:09:44.179Z",
+    "url": "games/20261117230944-lane-racer-250/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Brick Blaster Arena 66",
     "slug": "20261117160920-brick-blaster-786",
     "description": "Breakout game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
