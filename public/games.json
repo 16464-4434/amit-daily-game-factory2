@@ -1,5 +1,17 @@
 [
   {
+    "title": "Brick Blaster Arena 66",
+    "slug": "20261117160920-brick-blaster-786",
+    "description": "Breakout game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Breakout",
+    "engineId": "brick-blaster",
+    "date": "2026-11-17",
+    "createdAt": "2026-11-17T16:09:20.890Z",
+    "url": "games/20261117160920-brick-blaster-786/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Fishing Timing Dock 85",
     "slug": "20261116235056-fishing-timing-535",
     "description": "Fishing game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
