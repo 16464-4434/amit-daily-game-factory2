@@ -1,5 +1,17 @@
 [
   {
+    "title": "Treasure Mine Clicker 67",
+    "slug": "20261120222129-mining-grid-967",
+    "description": "Mining game in jungle subway. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Mining",
+    "engineId": "mining-grid",
+    "date": "2026-11-20",
+    "createdAt": "2026-11-20T22:21:29.094Z",
+    "url": "games/20261120222129-mining-grid-967/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Avoid Arena Swarm 90",
     "slug": "20261120153313-avoid-arena-810",
     "description": "Survival game in moon desert. V7 uses a separate game template, not the same engine with a new skin.",
