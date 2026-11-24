@@ -1,5 +1,17 @@
 [
   {
+    "title": "Color Brain Switch 62",
+    "slug": "20261124175305-color-brain-692",
+    "description": "Puzzle game in pirate classroom. V7 uses a separate game template, not the same engine with a new skin.",
+    "genre": "Puzzle",
+    "engineId": "color-brain",
+    "date": "2026-11-24",
+    "createdAt": "2026-11-24T17:53:05.731Z",
+    "url": "games/20261124175305-color-brain-692/",
+    "generatorModel": "v7-not-same-local",
+    "uniqueCatalogSize": 20
+  },
+  {
     "title": "Coin Cave Platformer 55",
     "slug": "20261124023534-platform-coins-145",
     "description": "Platformer game in tiny city. V7 uses a separate game template, not the same engine with a new skin.",
